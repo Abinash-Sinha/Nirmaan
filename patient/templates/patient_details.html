@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>Patient Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ patient.name }}</h5>
+            <p class="card-text"><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
+            <p class="card-text"><strong>Father's Name:</strong> {{ patient.father_name }}</p>
+            <p class="card-text"><strong>Mother's Name:</strong> {{ patient.mother_name }}</p>
+            {% if patient.image %}
+            <p class="card-text"><img src="{{ patient.image.url }}" alt="{{ patient.name }}" class="img-fluid"></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

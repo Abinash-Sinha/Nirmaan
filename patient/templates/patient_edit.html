@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Patient</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>Edit Patient</h1>
+    {% load crispy_forms_tags %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ patient.name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" class="form-control" id="dob" name="date_of_birth" value="{{ patient.date_of_birth }}" required>
+        </div>
+        <div class="form-group">
+            <label for="father_name">Father's Name</label>
+            <input type="text" class="form-control" id="father_name" name="father_name" value="{{ patient.father_name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="mother_name">Mother's Name</label>
+            <input type="text" class="form-control" id="mother_name" name="mother_name" value="{{ patient.mother_name }}" required>
+        </div> -->
+        {% crispy form %}
+        <!-- <button type="submit" class="btn btn-primary">Update Patient</button> -->
+    </form>
+</div>
+
+</body>
+</html>

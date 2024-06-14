@@ -1,0 +1,59 @@
+<!-- patient_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Patients</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'get_patients' %}">Nirmaan</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h1>List of Patients</h1>
+    <a href="{% url 'add_patient' %}" class="btn btn-primary mb-3">Add Patient</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date of Birth</th>
+                <th>Father's Name</th>
+                <th>Mother's Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td><a href="{% url 'view_patient' patient.id %}">{{ patient.name }}</a></td>
+                <td>{{ patient.date_of_birth }}</td>
+                <td>{{ patient.father_name }}</td>
+                <td>{{ patient.mother_name }}</td>
+                <td>
+                    <a href="{% url 'edit_patient' patient.id %}" class="btn btn-info btn-sm">Edit</a>
+                    <form action="{% url 'delete_patient' patient.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
