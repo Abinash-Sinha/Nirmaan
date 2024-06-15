@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <form method="post" class="logout" id="signup_form" action="{% url 'account_logout' %}">
+            <div class="text-left mb-4">
+                <h1 class="h3 mb-3 font-weight-normal">Sign out</h1>
+            </div>
+            {{ form.non_field_errors | safe }}
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-12">
+                    <div class="form-floating form-group">
+                        {{ form.logout }}
+                        <label for="{{form.login.id_for_label}}">Are you sure?</label>
+                        {{ form.login.errors|safe }}
+                    </div>
+                    <div class="col-6">
+                        {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                        {% endif %}
+                        <button class="btn btn-primary text-accent" type="submit">Sign out</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

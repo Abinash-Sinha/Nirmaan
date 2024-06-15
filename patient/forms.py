@@ -10,6 +10,8 @@ class PatientForm(forms.ModelForm):
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date'})
         }
+    image_data = forms.FileField(required=False, widget=forms.HiddenInput())
+    image = forms.ImageField(required=False)
 
     def __init__(self, *args, **kwargs):
         super(PatientForm, self).__init__(*args, **kwargs)

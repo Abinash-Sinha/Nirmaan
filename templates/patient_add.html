@@ -1,0 +1,73 @@
+<!-- add_patient.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>Add Patient</h1>
+    <form id="addPatientForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" class="form-control" id="dob" name="date_of_birth" required>
+        </div>
+        <div class="form-group">
+            <label for="father_name">Father's Name</label>
+            <input type="text" class="form-control" id="father_name" name="father_name" required>
+        </div>
+        <div class="form-group">
+            <label for="mother_name">Mother's Name</label>
+            <input type="text" class="form-control" id="mother_name" name="mother_name" required>
+        </div>
+        <div class="form-group">
+            <label for="image">Upload Image</label>
+            <input type="file" class="form-control-file" id="image" name="image">
+            <input type="hidden" id="image_data" name="image_data">
+            <canvas id="canvas" style="display: none;"></canvas>
+            <video id="video" width="400" height="300"></video>
+            <button type="button" class="btn btn-primary" id="captureBtn">Capture Image from Webcam</button>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Patient</button>
+    </form>
+</div>
+
+<script>
+$(document).ready(function() {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('captureBtn');
+    const image_data = document.getElementById('image_data');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function(err) {
+            console.error("Error accessing the webcam: " + err);
+        });
+
+    captureBtn.addEventListener('click', function() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageDataUrl = canvas.toDataURL('image/jpeg');
+        image_data.value = imageDataUrl;
+        alert('Image captured from webcam!');
+    });
+});
+</script>
+
+</body>
+</html>
