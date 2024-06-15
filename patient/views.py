@@ -11,6 +11,7 @@ from .forms import PatientForm
 def add_patient(request):
     if request.method == 'POST':
         form = PatientForm(request.POST, request.FILES)
+        print(form.is_valid())
         if form.is_valid():
             image_data = request.POST.get('image_data')  # Get the base64-encoded image data from the form
             if image_data:
