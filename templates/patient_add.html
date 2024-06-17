@@ -1,4 +1,3 @@
-<!-- add_patient.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,39 +6,119 @@
     <title>Add Patient</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        .card-body {
+            max-width: 600px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        #video {
+            width: 100%;
+            height: auto;
+        }
+        .capture-button {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container mt-5">
-    <h1>Add Patient</h1>
-    <form id="addPatientForm" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title mb-4">Add Patient</h1>
+            <form id="addPatientForm" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Name of the patient</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="admission_date">Date of Admission</label>
+                    <input type="date" class="form-control" id="admission_date" name="admission_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="release_date">Date of Release</label>
+                    <input type="date" class="form-control" id="release_date" name="release_date">
+                </div>
+                <div class="form-group">
+                    <label for="date_of_birth">Date of Birth</label>
+                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+                </div>
+                <div class="form-group">
+                    <label for="father_name">Father's Name</label>
+                    <input type="text" class="form-control" id="father_name" name="father_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="mother_name">Mother's Name</label>
+                    <input type="text" class="form-control" id="mother_name" name="mother_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="occupation">Occupation</label>
+                    <input type="text" class="form-control" id="occupation" name="occupation" required>
+                </div>
+                <div class="form-group">
+                    <label for="qualification">Qualification</label>
+                    <input type="text" class="form-control" id="qualification" name="qualification" required>
+                </div>
+                <div class="form-group">
+                    <label for="marital_status">Marital Status</label>
+                    <select class="form-control" id="marital_status" name="marital_status" required>
+                        <option value="Married">Married</option>
+                        <option value="Unmarried">Unmarried</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="religion">Religion</label>
+                    <select class="form-control" id="religion" name="religion" required>
+                        <option value="Hindu">Hindu</option>
+                        <option value="Muslim">Muslim</option>
+                        <option value="Christian">Christian</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="income_pm">Income Per Month</label>
+                    <input type="number" class="form-control" id="income_pm" name="income_pm" required>
+                </div>
+                <div class="form-group">
+                    <label for="language_spoken">Language Spoken</label>
+                    <input type="text" class="form-control" id="language_spoken" name="language_spoken" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <input type="tel" class="form-control" id="phone_number" name="phone_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="whatsapp_number">WhatsApp Number</label>
+                    <input type="tel" class="form-control" id="whatsapp_number" name="whatsapp_number">
+                </div>
+                <div class="form-group">
+                    <label for="email_id">Email ID</label>
+                    <input type="email" class="form-control" id="email_id" name="email_id" required>
+                </div>
+                <div class="form-group">
+                    <label for="details_of_id_proof_recieved">Details of ID Proof Received</label>
+                    <textarea class="form-control" id="details_of_id_proof_recieved" name="details_of_id_proof_recieved" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cut_mark_detail">Cut Mark Details</label>
+                    <input type="text" class="form-control" id="cut_mark_detail" name="cut_mark_detail">
+                </div>
+                <div class="form-group">
+                    <label for="image">Patient Photo</label>
+                    <input type="file" class="form-control-file" id="image" name="image">
+                    <input type="hidden" id="image_data" name="image_data">
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <video id="video"></video>
+                    <button type="button" class="btn btn-primary capture-button" id="captureBtn">Capture Image from Webcam</button>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Patient</button>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="dob">Date of Birth</label>
-            <input type="date" class="form-control" id="dob" name="date_of_birth" required>
-        </div>
-        <div class="form-group">
-            <label for="father_name">Father's Name</label>
-            <input type="text" class="form-control" id="father_name" name="father_name" required>
-        </div>
-        <div class="form-group">
-            <label for="mother_name">Mother's Name</label>
-            <input type="text" class="form-control" id="mother_name" name="mother_name" required>
-        </div>
-        <div class="form-group">
-            <label for="image">Upload Image</label>
-            <input type="file" class="form-control-file" id="image" name="image">
-            <input type="hidden" id="image_data" name="image_data">
-            <canvas id="canvas" style="display: none;"></canvas>
-            <video id="video" width="400" height="300"></video>
-            <button type="button" class="btn btn-primary" id="captureBtn">Capture Image from Webcam</button>
-        </div>
-        <button type="submit" class="btn btn-primary">Add Patient</button>
-    </form>
+    </div>
 </div>
 
 <script>
