@@ -42,19 +42,19 @@ class Patient(models.Model):
 	def __str__(self):
 		return self.name
 
-# class Representative(models.Model):
-# 	patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-# 	father_name = models.CharField(max_length=100)
-# 	mother_name = models.CharField(max_length=100)
-# 	address = models.TextField()
-# 	name_of_local_guardian = models.CharField(max_length=100)
-# 	address_of_local_guardian = models.TextField(max_length=100)
-# 	name_of_person_responsible_for_treatment = models.CharField(max_length=100)
-# 	address_2 = models.CharField(max_length=100)
-# 	guardian_photo = models.ImageField()
-# 	local_guardian_photo = models.ImageField()
-# 	detail_of_id_proof_recieved = models.TextField()
+class Representative(models.Model):
+	patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+	father_name = models.CharField(max_length=100)
+	mother_name = models.CharField(max_length=100)
+	address = models.TextField()
+	name_of_local_guardian = models.CharField(max_length=100)
+	address_of_local_guardian = models.TextField()
+	name_of_person_responsible_for_treatment = models.CharField(max_length=100)
+	address_2 = models.CharField(max_length=100)
+	# guardian_photo = models.ImageField(upload_to='representative_images/',blank=True, null=True)
+	# local_guardian_photo = models.ImageField()
+	detail_of_id_proof_recieved = models.TextField()
 
-# 	def __str__(self) -> str:
-# 		return self.patient_name
+	def __str__(self) -> str:
+		return self.patient.name
 

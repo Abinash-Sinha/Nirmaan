@@ -2,7 +2,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from drf_extra_fields.fields import Base64ImageField
-from .models import Patient
+from .models import Patient, Representative
 
 class PatientForm(forms.ModelForm):
     image = forms.ImageField(required=False)
@@ -33,3 +33,27 @@ class PatientForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.add_input(Submit('submit', 'Submit', css_class='btn-primary'))
+    
+class RepresentativeForm(forms.ModelForm):
+    class Meta:
+        model = Representative
+        fields = [
+            'father_name', 
+            'mother_name', 
+            'address', 
+            'name_of_local_guardian', 
+            'address_of_local_guardian', 
+            'name_of_person_responsible_for_treatment', 
+            'address_2', 
+            'detail_of_id_proof_recieved'
+        ]
+        widgets = {
+            'father_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'mother_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'name_of_local_guardian': forms.TextInput(attrs={'class': 'form-control'}),
+            'address_of_local_guardian': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'name_of_person_responsible_for_treatment': forms.TextInput(attrs={'class': 'form-control'}),
+            'address_2': forms.TextInput(attrs={'class': 'form-control'}),
+            'detail_of_id_proof_recieved': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }

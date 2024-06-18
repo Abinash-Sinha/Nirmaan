@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Patient</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
         .card-body {
@@ -21,16 +22,73 @@
         .capture-button {
             margin-top: 10px;
         }
+        .dark-mode {
+            background-color: #2c2c2c;
+            color: #f8f8fa;
+        }
+        .dark-mode .card {
+            background-color: #3c3c3c;
+            color: #f8f8fa;
+        }
+        .toggle-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        .toggle-button i {
+            color: #007bff;
+        }
+        .dark-mode .toggle-button i {
+            color: #f8f8fa;
+        }
     </style>
 </head>
 <body>
-
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'get_patients' %}">Nirmaan</a>
+        <div class="collapse navbar-collapse justify-content-right" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'get_patients' %}">Patients</a>
+                </li>
+                <!-- Add other navigation links here if needed -->
+            </ul>
+    
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="toggle-button" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+    </div>
 <div class="container mt-5">
     <div class="card">
         <div class="card-body">
             <h1 class="card-title mb-4">Add Patient</h1>
             <form id="addPatientForm" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
+                <!-- Patient Details Section -->
                 <div class="form-group">
                     <label for="name">Name of the patient</label>
                     <input type="text" class="form-control" id="name" name="name" required>
@@ -115,6 +173,42 @@
                     <video id="video"></video>
                     <button type="button" class="btn btn-primary capture-button" id="captureBtn">Capture Image from Webcam</button>
                 </div>
+
+                <!-- Representative Details Section -->
+                <h2 class="card-title mb-4 mt-5">Add Representative</h2>
+                <div class="form-group">
+                    <label for="father_name_representative">Father's Name</label>
+                    <input type="text" class="form-control" id="father_name_representative" name="father_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="mother_name_representative">Mother's Name</label>
+                    <input type="text" class="form-control" id="mother_name_representative" name="mother_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="name_of_local_guardian">Name of Local Guardian</label>
+                    <input type="text" class="form-control" id="name_of_local_guardian" name="name_of_local_guardian" required>
+                </div>
+                <div class="form-group">
+                    <label for="address_of_local_guardian">Address of Local Guardian</label>
+                    <textarea class="form-control" id="address_of_local_guardian" name="address_of_local_guardian" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="name_of_person_responsible_for_treatment">Name of Person Responsible for Treatment</label>
+                    <input type="text" class="form-control" id="name_of_person_responsible_for_treatment" name="name_of_person_responsible_for_treatment" required>
+                </div>
+                <div class="form-group">
+                    <label for="address_2">Address</label>
+                    <input type="text" class="form-control" id="address_2" name="address_2" required>
+                </div>
+                <div class="form-group">
+                    <label for="detail_of_id_proof_recieved">Details of ID Proof Received</label>
+                    <textarea class="form-control" id="detail_of_id_proof_recieved" name="detail_of_id_proof_recieved" rows="3"></textarea>
+                </div>
+
                 <button type="submit" class="btn btn-primary">Add Patient</button>
             </form>
         </div>
@@ -146,6 +240,9 @@ $(document).ready(function() {
         alert('Image captured from webcam!');
     });
 });
+function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+    }
 </script>
 
 </body>
