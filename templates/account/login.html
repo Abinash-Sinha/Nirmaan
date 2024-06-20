@@ -5,49 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Patient</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 400px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .form-floating label {
+            padding: 0.75rem 0.75rem 0;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .text-accent {
+            color: #007bff;
+        }
+        .text-accent:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 <div class="container d-flex justify-content-center align-items-center vh-100">
-    <form method="post" class="login" id="signup_form" action="{% url 'account_login' %}">
-        <div class="text-left mb-5">
-            <h1 class="h2 mb-4 font-weight-bold">Welcome to Nirmaan</h1>    
+    <form method="post" id="signup_form" action="{% url 'account_login' %}">
+        <div class="text-center mb-5">
+            <h1 class="h2 mb-4 font-weight-bold">Welcome to Nirmaan</h1>
         </div>
         <div class="text-left mb-4">
-        <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+            <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
         </div>
         {{ form.non_field_errors | safe }}
         {% csrf_token %}
         <div class="row g-3">
             <div class="col-12">
-                <div class="form-floating form-group">
+                <div class="form-floating form-group mb-3">
                     {{ form.login }}
                     <label for="{{form.login.id_for_label}}">Email</label>
                     {{ form.login.errors|safe }}
                 </div>
             </div>
             <div class="col-12">
-                <div class="form-floating form-group my-3">
+                <div class="form-floating form-group mb-3">
                     {{ form.password }}
                     <label for="{{form.password.id_for_label}}">Password</label>
                     {{ form.password.errors|safe }}
                 </div>
             </div>
             <div class="col-12">
-                <div class="form-check">
-                    <label for="{{form.remember.id_for_label}}" class="form-check-label">Remember me</label>
+                <div class="form-check mb-3">
                     {{ form.remember }}
+                    <label for="{{form.remember.id_for_label}}" class="form-check-label">Remember me</label>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-12">
                 {% if redirect_field_value %}
                 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                 {% endif %}
-                <button class="btn btn-primary w-100 py-3 bg-accent" type="submit">Sign in</button>
-                <a class="button secondaryAction text-accent" href="{% url 'account_reset_password' %}">Forgot
-                    Password?</a>
+                <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+            </div>
+            <div class="col-12 text-center mt-3">
+                <a class="text-accent" href="{% url 'account_reset_password' %}">Forgot Password?</a>
             </div>
         </div>
     </form>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -14,6 +14,7 @@
         }
         .container {
             max-width: 800px;
+            margin-top: 30px;
         }
         .card {
             border: none;
@@ -54,24 +55,38 @@
         }
         .toggle-button {
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             right: 20px;
             z-index: 1000;
+            cursor: pointer;
+        }
+        .toggle-button i {
+            color: #007bff;
+        }
+        .dark-mode .toggle-button i {
+            color: #f8f8fa;
+        }
+        .section-title {
+            margin-top: 40px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="{% url 'get_patients' %}">Nirmaan</a>
-        <div class="collapse navbar-collapse justify-content-right" id="navbarSupportedContent">
-            <ul class="navbar-nav">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'get_patients' %}">Patients</a>
                 </li>
                 <!-- Add other navigation links here if needed -->
             </ul>
-    
-            <ul class="navbar-nav">
+            <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
@@ -83,15 +98,6 @@
                 {% endif %}
             </ul>
         </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                
-            </ul>
-        </div>
     </nav>
     <button class="btn btn-secondary toggle-button" onclick="toggleTheme()">
         <i class="fas fa-moon"></i>
@@ -101,12 +107,11 @@
             <h1>Patient Details</h1>
             <div class="card">
                 <div class="card-body">
+                    <h2 class="card-title mb-4 mt-5">Personal Information</h2>
                     <h5 class="card-title">{{ patient.name }}</h5>
                     <p class="card-text"><strong>Admission Date:</strong> {{ patient.admission_date }}</p>
                     <p class="card-text"><strong>Release Date:</strong> {{ patient.release_date }}</p>
                     <p class="card-text"><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
-                    <p class="card-text"><strong>Father's Name:</strong> {{ patient.father_name }}</p>
-                    <p class="card-text"><strong>Mother's Name:</strong> {{ patient.mother_name }}</p>
                     <p class="card-text"><strong>Occupation:</strong> {{ patient.occupation }}</p>
                     <p class="card-text"><strong>Qualification:</strong> {{ patient.qualification }}</p>
                     <p class="card-text"><strong>Mother's Name:</strong> {{ patient.mother_name }}</p>
@@ -117,8 +122,28 @@
                     <p class="card-text"><strong>Phone Number:</strong> {{ patient.phone_number }}</p>
                     <p class="card-text"><strong>Whatsapp Number:</strong> {{ patient.whatsapp_number }}</p>
                     <p class="card-text"><strong>Email ID:</strong> {{ patient.email_id }}</p>
-                    <p class="card-text"><strong>Details of ID Proof:</strong> {{ patient.details_of_id_proof }}</p>
+                    <p class="card-text"><strong>Details of ID Proof:</strong> {{ patient.details_of_id_proof_recieved }}</p>
                     <p class="card-text"><strong>Cut Mark Details:</strong> {{ patient.cut_mark_detail }}</p>
+                    <h2 class="card-title mb-4 mt-5">Representative/Guardian/Parent</h2>
+                    <p class="card-text"><strong>Father Name:</strong> {{ representative.father_name }}</p>
+                    <p class="card-text"><strong>Mother Name:</strong> {{ representative.Mother_name }}</p>
+                    <p class="card-text"><strong>Address:</strong> {{ representative.address }}</p>
+                    <p class="card-text"><strong>Name of Local Guardian:</strong> {{ representative.name_of_local_guardian }}</p>
+                    <p class="card-text"><strong>Address of Local Guardian:</strong> {{ representative.address_of_local_guardian }}</p>
+                    <p class="card-text"><strong>Name of Person Responsible for Treatment:</strong> {{ representative.name_of_person_responsible_for_treatment }}</p>
+                    <p class="card-text"><strong>Address:</strong> {{ representative.address_2 }}</p>
+                    <p class="card-text"><strong>Detail of ID Proof Recieved:</strong> {{ representative.detail_of_id_proof_recieved }}</p>
+                    <h2 class="card-title mb-4 mt-5">Declaration</h2>
+                    <p class="card-text"><strong>Verbal abuse towards others:</strong> {{ declaration.verbal_abuse }}</p>
+                    <p class="card-text"><strong>Physical abuse towards others:</strong> {{ declaration.physical_abuse }}</p>
+                    <p class="card-text"><strong>Breaking articles:</strong> {{ declaration.breaking_articles }}</p>
+                    <p class="card-text"><strong>Involvement in antisocial activities:</strong> {{ declaration.antisocial_activities }}</p>
+                    <p class="card-text"><strong>Pending law suit including complaint and grievancelodged under any authority against the patient:</strong> {{ declaration.law_suits }}</p>
+                    <p class="card-text"><strong>Have you seen any depression, social isolation, self-harm or suicidal tendency within last 30 days in the patient:</strong> {{ declaration.abnormal_tendencies }}</p>
+                    <p class="card-text"><strong>Any abnormality during intimate romantic involvement:</strong> {{ declaration.abnormal_romatic_involment }}</p>
+                    <p class="card-text"><strong>Exposure to high risk behavior:</strong> {{ declaration.high_risk_behavior }}</p>
+                    <p class="card-text"><strong>Unreasonable anger outburst:</strong> {{ declaration.unreasonable_anger }}</p>
+                    <p class="card-text"><strong>Irresponsible toward life and familial aspects:</strong> {{ declaration.irresponsible_aspects }}</p>
                     {% if patient.image %}
                     <div class="text-center mb-3">
                         <img src="{{ patient.image.url }}" alt="{{ patient.name }}" class="img-fluid patient-image">

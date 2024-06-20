@@ -4,17 +4,18 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 import os
 import base64
-from .models import Patient, Representative
-from .forms import PatientForm, RepresentativeForm
+from .models import Patient, Representative, Declaration
+from .forms import PatientForm, RepresentativeForm, DeclarationForm
 
 @login_required()
 def add_patient(request):
     if request.method == 'POST':
         form = PatientForm(request.POST, request.FILES)
         representative_form = RepresentativeForm(request.POST)
+        declaration_form = DeclarationForm(request.POST)
 
-        print(form.is_valid())
-        if form.is_valid() and representative_form.is_valid():
+        # print(form.is_valid())
+        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid():
             image_data = request.POST.get('image_data')  # Get the base64-encoded image data from the form
             if image_data:
                 # Decode base64 data and save as a file in the media directory
@@ -39,12 +40,18 @@ def add_patient(request):
             representative.patient = patient
             representative.save()
 
+            # Save declaration form
+            declaration = declaration_form.save(commit=False)
+            declaration.patient = patient
+            declaration.save()
+
             return redirect('get_patients')
     else:
         form = PatientForm()
         representative_form = RepresentativeForm()
+        declaration_form = DeclarationForm()
 
-    return render(request, 'patient_add.html', {'form': form, 'representative_form': representative_form})
+    return render(request, 'patient_add.html', {'form': form, 'representative_form': representative_form, 'declaration_form': declaration_form})
 
 @login_required()
 def edit_patient(request, patient_id):
@@ -82,9 +89,21 @@ def get_patients(request):
 @login_required()
 def view_patient_details(request, patient_id):
     patient = get_object_or_404(Patient, pk=patient_id)
-    return render(request, 'patient_details.html', {'patient': patient})
+    representative = get_object_or_404(Representative, patient=patient)
+    declaration = get_object_or_404(Declaration, patient=patient)
+
+    return render(request, 'patient_details.html', {'patient': patient, 'representative': representative, 'declaration': declaration})
 
 def view_representative(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
     representative = get_object_or_404(Representative, patient=patient)
     return render(request, 'view_representative.html', {'patient': patient, 'representative': representative})
+
+@login_required
+def search_patients(request):
+    query = request.GET.get('q')
+    if query:
+        patients = Patient.objects.filter(name__icontains=query)
+    else:
+        patients = Patient.objects.all()
+    return render(request, 'patient_search.html', {'patients': patients, 'query': query})

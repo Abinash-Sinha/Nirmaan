@@ -58,3 +58,26 @@ class Representative(models.Model):
 	def __str__(self) -> str:
 		return self.patient.name
 
+class Declaration(models.Model):
+	YES = 'Yes'
+	NO = 'No'
+	NOT_SURE = 'Not Sure'
+	CHOICES = [
+		(YES, 'Yes'),
+		(NO, 'No'),
+		(NOT_SURE, 'Not Sure'),
+	]
+	patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+	verbal_abuse = models.CharField(max_length=10, choices=CHOICES, help_text="Verbal abuse towards other")
+	physical_abuse = models.CharField(max_length=10, choices=CHOICES, help_text="Physical abuse towards others")
+	breaking_articles = models.CharField(max_length=10, choices=CHOICES, help_text="Breaking articles")
+	antisocial_activities = models.CharField(max_length=10, choices=CHOICES, help_text="Involvement in antisocial activities")
+	law_suits = models.CharField(max_length=10, choices=CHOICES, help_text="Pending law suit including complaint and grievancelodged under any authority against the patient")
+	abnormal_tendencies = models.CharField(max_length=10, choices=CHOICES, help_text="Have you seen any depression, social isolation, self-harm or suicidal tendency within last 30 days in the patient")
+	abnormal_romatic_involment = models.CharField(max_length=10, choices=CHOICES, help_text="Any abnormality during intimate romantic involvement")
+	high_risk_behavior = models.CharField(max_length=10, choices=CHOICES, help_text="Exposure to high risk behavior")
+	unreasonable_anger = models.CharField(max_length=10, choices=CHOICES, help_text="Unreasonable anger outburst")
+	irresponsible_aspects = models.CharField(max_length=10, choices=CHOICES, help_text="Irresponsible toward life and familial aspects")
+
+	def __str__(self) -> str:
+		return self.patient.name
