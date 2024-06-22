@@ -1,65 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Patient</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/patient_add.styles.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <style>
-        body {
-            background-color: #f8f8fa;
-            padding-top: 20px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .container {
-            max-width: 800px;
-        }
-        .card-body {
-            max-width: 600px;
-            margin: auto;
-        }
-        .card-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-        }
-        .card-text {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        .dark-mode {
-            background-color: #2c2c2c;
-            color: #f8f8fa;
-        }
-        .dark-mode .card {
-            background-color: #3c3c3c;
-            color: #f8f8fa;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-        }
-        .toggle-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-        .toggle-button i {
-            color: #007bff;
-        }
-        .dark-mode .toggle-button i {
-            color: #f8f8fa;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        #video {
-            width: 100%;
-            height: auto;
-        }
-        .capture-button {
-            margin-top: 10px;
-        }
-    </style>
+    <script src="{% static 'js/patient_add.script.js' %}"></script>
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -91,70 +42,69 @@
     <button class="btn btn-secondary toggle-button" onclick="toggleTheme()">
         <i class="fas fa-moon"></i>
     </button>
-<div class="container mt-5">
-    <div class="card">
-        <div class="card-body">
-            <h1 class="card-title mb-4">Add Patient</h1>
-            {% load crispy_forms_tags %}
-            <form id="addPatientForm" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title mb-4">Add Patient</h1>
+                {% load crispy_forms_tags %}
+                <form id="addPatientForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+    
+                    <!-- Patient Form Fields -->
+                    {{ form | crispy }}
+    
+                    <!-- Capture Image Section -->
+                    <div class="form-group">
+                        <label for="image">Patient Photo</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="image" name="image">
+                            <label class="custom-file-label" for="image">Choose file...</label>
+                        </div>
+                        <input type="hidden" id="image_data" name="image_data">
+                        <canvas id="canvas" style="display: none;"></canvas>
+                        <video id="video"></video>
+                        <button type="button" class="btn btn-primary capture-button" id="captureBtn">Capture Image from Webcam</button>
+                    </div>
+                    
+                    <!-- Representative Form Fields -->
+                    <h2 class="card-title mb-4 mt-5">Add Representative</h2>
+                    {{ representative_form | crispy }}
+                    
+                    <!-- Declaration Form Fields -->
+                    <div class="form-group">
+                        <h2 class="card-title mb-4 mt-5">Add Declaration</h2>
+                        {% for field in declaration_form %}
+                            {{ field.errors }}
+                            <div class="custom-dropdown">
+                                {{ field.field.help_text }}
+                                <button type="button" class="dropdown-btn" id="dropdown-btn-{{ field.name }}">Select an option</button>
+                                <div class="dropdown-content" id="dropdown-content-{{ field.name }}">
+                                    {% for choice in field.field.choices %}
+                                        <div data-value="{{ choice.0 }}">{{ choice.1 }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
 
-                <!-- Patient Form Fields -->
-                {{ form | crispy }}
-
-                <!-- Capture Image Section -->
-                <div class="form-group">
-                    <label for="image">Patient Photo</label>
-                    <input type="file" class="form-control-file" id="image" name="image">
-                    <input type="hidden" id="image_data" name="image_data">
-                    <canvas id="canvas" style="display: none;"></canvas>
-                    <video id="video"></video>
-                    <button type="button" class="btn btn-primary capture-button" id="captureBtn">Capture Image from Webcam</button>
-                </div>
-
-                <!-- Representative Form Fields -->
-                <h2 class="card-title mb-4 mt-5">Add Representative</h2>
-                {{ representative_form | crispy }}
-
-                <!-- Declaration Form Fields -->
-                <h2 class="card-title mb-4 mt-5">Add Declaration</h2>
-                {{ declaration_form | crispy }}
-
-                <button type="submit" class="btn btn-primary">Add Patient</button>
-            </form>
+                    <button type="submit" class="btn btn-primary">Add Patient</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
-<script>
-function toggleTheme() {
-        document.body.classList.toggle('dark-mode');
-    }
-$(document).ready(function() {
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const captureBtn = document.getElementById('captureBtn');
-    const image_data = document.getElementById('image_data');
-
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(function(stream) {
-            video.srcObject = stream;
-            video.play();
-        })
-        .catch(function(err) {
-            console.error("Error accessing the webcam: " + err);
+    <script>
+        $('.dropdown-btn').click(function() {
+            $(this).next('.dropdown-content').toggle();
         });
-
-    captureBtn.addEventListener('click', function() {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageDataUrl = canvas.toDataURL('image/jpeg');
-        image_data.value = imageDataUrl;
-        alert('Image captured from webcam!');
-    });
-});
-</script>
-
+        
+        $('.dropdown-content div').click(function() {
+            const value = $(this).data('value');
+            const text = $(this).text();
+            const dropdownBtn = $(this).closest('.custom-dropdown').find('.dropdown-btn');
+            dropdownBtn.text(text);
+            $(this).closest('.custom-dropdown').find('input').val(value);
+            $(this).parent().hide();
+        });
+    </script>
 </body>
 </html>

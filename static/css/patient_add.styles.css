@@ -1,0 +1,151 @@
+body {
+    background-color: #f8f8fa;
+    padding-top: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+.container {
+    max-width: 800px;
+}
+.card-body {
+    max-width: 600px;
+    margin: auto;
+}
+.card-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+.card-text {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+.dark-mode {
+    background-color: #2c2c2c;
+    color: #f8f8fa;
+}
+.dark-mode .card {
+    background-color: #3c3c3c;
+    color: #f8f8fa;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+.toggle-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+.toggle-button i {
+    color: #007bff;
+}
+.dark-mode .toggle-button i {
+    color: #f8f8fa;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+#video {
+    width: 100%;
+    height: auto;
+}
+.capture-button {
+    margin-top: 10px;
+}
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.custom-dropdown select {
+    display: none;
+}
+.custom-dropdown .dropdown-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    text-align: left;
+    color: #000;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+.custom-dropdown .dropdown-btn:hover {
+    background-color: #f1f1f1;
+}
+.custom-dropdown .dropdown-btn:after {
+    content: '\25BC';
+    margin-left: 5px;
+}
+.custom-dropdown .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    z-index: 1;
+    width: 100%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.custom-dropdown .dropdown-content div {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.custom-dropdown .dropdown-content div:hover {
+    background-color: #f1f1f1;
+}
+.custom-dropdown .dropdown-content div:last-child {
+    border-bottom: none;
+}
+.dark-mode .custom-dropdown .dropdown-btn {
+    background-color: #3c3c3c;
+    color: #f8f8fa;
+    border: 1px solid #007bff;
+}
+.dark-mode .custom-dropdown .dropdown-btn:hover {
+    background-color: #4a4a4a;
+}
+.dark-mode .custom-dropdown .dropdown-content {
+    background-color: #3c3c3c;
+    color: #f8f8fa;
+    border: 1px solid #007bff;
+}
+.dark-mode .custom-dropdown .dropdown-content div:hover {
+    background-color: #4a4a4a;
+}
+/* Custom styling for file input */
+.custom-file-input {
+    color: transparent;
+    width: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+}
+.custom-file-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.custom-file-label::after {
+    content: 'Browse';
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.custom-file-label:hover::after {
+    background-color: #0056b3;
+}
+.custom-file-label:active::after {
+    background-color: #0056b3;
+}
+.custom-file-input:focus ~ .custom-file-label::after {
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+}
+/* End custom styling for file input */

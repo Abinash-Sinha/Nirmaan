@@ -57,21 +57,26 @@ def add_patient(request):
 def edit_patient(request, patient_id):
     patient = get_object_or_404(Patient, pk=patient_id)
     representative = get_object_or_404(Representative, patient=patient)
+    declaration = get_object_or_404(Declaration, patient=patient)
 
     if request.method == 'POST':
         form = PatientForm(request.POST, request.FILES, instance=patient)
         representative_form = RepresentativeForm(request.POST, instance=representative)
+        declaration_form = DeclarationForm(request.POST, instance=declaration)
 
-        if form.is_valid() and representative_form.is_valid():
+        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid():
             form.save()
             representative_form.save()
+            declaration_form.save()
             return HttpResponseRedirect(reverse('get_patients'))
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
     else:
         form = PatientForm(instance=patient)
         representative_form = RepresentativeForm(instance=representative)
-    return render(request, 'patient_edit.html', {'form': form, 'representative_form': representative_form,'patient': patient})
+        declaration_form = DeclarationForm(instance=declaration)
+
+    return render(request, 'patient_edit.html', {'form': form, 'representative_form': representative_form, 'declaration_form': declaration_form, 'patient': patient})
 
 @login_required()
 def delete_patient(request, patient_id):
