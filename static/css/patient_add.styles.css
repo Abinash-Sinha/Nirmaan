@@ -149,3 +149,11 @@ body {
     box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
 }
 /* End custom styling for file input */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+.form-grid .form-group {
+    margin-bottom: 20px;
+}

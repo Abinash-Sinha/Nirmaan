@@ -1,15 +1,15 @@
 from django.db import models
 
 class Patient(models.Model):
-	name = models.CharField(max_length=100)
-	admission_date = models.DateField()
-	release_date = models.DateField(blank=True, null=True)
-	date_of_birth = models.DateField()
-	father_name = models.CharField(max_length=100)
-	mother_name = models.CharField(max_length=100)
+	name = models.CharField(name="Name of Patient", max_length=100)
+	admission_date = models.DateField(name="Date of Admission", blank=True, null=True)
+	release_date = models.DateField(name="Date of Release", blank=True, null=True)
+	date_of_birth = models.DateField(name="Date of Birth", blank=True, null=True)
+	father_name = models.CharField(name="Name of Father", blank=True, null=True, max_length=100)
+	mother_name = models.CharField(name="Name of Mother", blank=True, null=True, max_length=100)
 	image = models.ImageField(upload_to='patient_images/', blank=True, null=True)
-	occupation = models.CharField(max_length=100)
-	qualification = models.CharField(max_length=100)
+	occupation = models.CharField(name="Occupation", blank=True, null=True, max_length=100)
+	qualification = models.CharField(name="Qualification", blank=True, null=True, max_length=100)
 	
 	MARRIED = 'Married'
 	UNMARRIED = 'Unmarried'
@@ -17,7 +17,7 @@ class Patient(models.Model):
         (MARRIED, 'Married'),
         (UNMARRIED, 'Unmarried'),
     ]
-	marital_status = models.CharField(max_length=50, choices=MARITAL_STATUS_CHOICES)
+	marital_status = models.CharField(name="Marital Status", blank=True, null=True, max_length=50, choices=MARITAL_STATUS_CHOICES)
 
 	HINDU = 'Hindu'
 	MUSLIM = 'Muslim'
@@ -30,14 +30,15 @@ class Patient(models.Model):
 		(OTHER, 'Other'),
 	]
 
-	religion = models.CharField(max_length=100, choices=RELIGION_CHOICES)
-	income_pm = models.DecimalField(max_digits=10, decimal_places=2)
-	language_spoken = models.CharField(max_length=100)
-	phone_number = models.IntegerField(max_length=10)
-	whatsapp_number = models.IntegerField(max_length=10)
-	email_id = models.EmailField()
-	details_of_id_proof_recieved = models.TextField()
-	cut_mark_detail = models.CharField(max_length=100)
+	religion = models.CharField(name="Religion", blank=True, null=True, max_length=100, choices=RELIGION_CHOICES)
+	income_pm = models.DecimalField(name="Income Per Month", blank=True, null=True, max_digits=10, decimal_places=2)
+	language_spoken = models.CharField(name="Language(s) Spoken", blank=True, null=True, max_length=100)
+	phone_number_1 = models.IntegerField(name="Phone Number (1)", blank=True, null=True, max_length=10)
+	phone_number_2 = models.IntegerField(name="Phone Number (2)", blank=True, null=True, max_length=10)
+	whatsapp_number = models.IntegerField(name="Whatsapp Number", blank=True, null=True, max_length=10)
+	email_id = models.EmailField(name="Email Address", blank=True, null=True)
+	details_of_id_proof_recieved = models.TextField(name="Details of ID Proof Recieved", blank=True, null=True)
+	cut_mark_detail = models.CharField(name="Cut Mark Details", blank=True, null=True, max_length=100)
 
 	def __str__(self):
 		return self.name
@@ -81,3 +82,36 @@ class Declaration(models.Model):
 
 	def __str__(self) -> str:
 		return self.patient.name
+	
+
+class MOU(models.Model):
+    CONDITIONS = [
+        ('narcotics_drugs_abuse', 'Narcotics Drugs Abuse'),
+        ('psychotropic_substance_abuse', 'Psychotropic Substance Abuse'),
+        ('controlled_substance_abuse', 'Controlled Substance Abuse'),
+        ('alcohol_beyond_permissible_limits', 'Alcohol beyond permissible limits'),
+        ('behavioural_psychological_condition', 'Associated Underlying Behavioural and Psychological Condition'),
+        ('mental_health_issue', 'Pre-Diagnosed Mental Health Issue'),
+    ]
+
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+	# Patient Conditions
+    narcotics_drugs_abuse = models.BooleanField(default=False)
+    psychotropic_substance_abuse = models.BooleanField(default=False)
+    controlled_substance_abuse = models.BooleanField(default=False)
+    alcohol_beyond_permissible_limits = models.BooleanField(default=False)
+    behavioural_psychological_condition = models.BooleanField(default=False)
+    mental_health_issue = models.BooleanField(default=False)
+
+    # Guardian Information
+    guardian_name = models.CharField(max_length=255)
+    
+    # Admission and Fee Information
+    admission_date = models.DateField()
+    monthly_fee_first_month = models.DecimalField(max_digits=10, decimal_places=2)
+    lab_charge = models.DecimalField(max_digits=10, decimal_places=2)
+    monthly_fee_second_month = models.DecimalField(max_digits=10, decimal_places=2)
+    monthly_fee_third_month = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"MOU for Guardian: {self.guardian_name} on {self.admission_date}"

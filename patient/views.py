@@ -4,8 +4,8 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 import os
 import base64
-from .models import Patient, Representative, Declaration
-from .forms import PatientForm, RepresentativeForm, DeclarationForm
+from .models import Patient, Representative, Declaration, MOU
+from .forms import PatientForm, RepresentativeForm, DeclarationForm, MOUForm
 
 @login_required()
 def add_patient(request):
@@ -13,9 +13,10 @@ def add_patient(request):
         form = PatientForm(request.POST, request.FILES)
         representative_form = RepresentativeForm(request.POST)
         declaration_form = DeclarationForm(request.POST)
+        mou_form = MOUForm(request.POST)
 
         # print(form.is_valid())
-        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid():
+        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid() and mou_form.is_valid():
             image_data = request.POST.get('image_data')  # Get the base64-encoded image data from the form
             if image_data:
                 # Decode base64 data and save as a file in the media directory
@@ -45,29 +46,38 @@ def add_patient(request):
             declaration.patient = patient
             declaration.save()
 
+            # Save mou form
+            mou = mou_form.save(commit=False)
+            mou.patient = patient
+            mou.save()
+
             return redirect('get_patients')
     else:
         form = PatientForm()
         representative_form = RepresentativeForm()
         declaration_form = DeclarationForm()
+        mou_form = MOUForm()
 
-    return render(request, 'patient_add.html', {'form': form, 'representative_form': representative_form, 'declaration_form': declaration_form})
+    return render(request, 'patient_add.html', {'form': form, 'representative_form': representative_form, 'declaration_form': declaration_form, 'mou_form': mou_form})
 
 @login_required()
 def edit_patient(request, patient_id):
     patient = get_object_or_404(Patient, pk=patient_id)
     representative = get_object_or_404(Representative, patient=patient)
     declaration = get_object_or_404(Declaration, patient=patient)
+    mou = get_object_or_404(MOU, patient=patient)
 
     if request.method == 'POST':
         form = PatientForm(request.POST, request.FILES, instance=patient)
         representative_form = RepresentativeForm(request.POST, instance=representative)
         declaration_form = DeclarationForm(request.POST, instance=declaration)
+        mou_form = MOUForm(request.POST, instance=mou)
 
-        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid():
+        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid() and mou_form.is_valid():
             form.save()
             representative_form.save()
             declaration_form.save()
+            mou_form.save()
             return HttpResponseRedirect(reverse('get_patients'))
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
@@ -75,8 +85,9 @@ def edit_patient(request, patient_id):
         form = PatientForm(instance=patient)
         representative_form = RepresentativeForm(instance=representative)
         declaration_form = DeclarationForm(instance=declaration)
+        mou_form = MOUForm(instance=mou)
 
-    return render(request, 'patient_edit.html', {'form': form, 'representative_form': representative_form, 'declaration_form': declaration_form, 'patient': patient})
+    return render(request, 'patient_edit.html', {'form': form, 'representative_form': representative_form, 'declaration_form': declaration_form, 'mou_form': mou_form, 'patient': patient})
 
 @login_required()
 def delete_patient(request, patient_id):
