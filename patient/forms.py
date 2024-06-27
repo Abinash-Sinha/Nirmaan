@@ -14,19 +14,30 @@ class PatientForm(forms.ModelForm):
         fields = ['Name of Patient', 'Date of Admission','Date of Release', 'Date of Birth', 'Name of Father', 'Name of Mother', 
                   'Occupation', 'Qualification', 'Marital Status', 'Religion', 
                   'Income Per Month', 'Language(s) Spoken', 'Phone Number (1)','Phone Number (2)', 
-                  'Whatsapp Number', 'Email Address', 'Details of ID Proof Recieved', 'Cut Mark Details']
+                  'Whatsapp Number', 'Email Address', 'Details of ID Proof Recieved', 'Cut Mark Details',
+                  'substance_abuse', 'psychological_disturbance', 'vindictiveness', 'behavioural_disfunctions',
+                   'prediagnosed_mental_condition'
+                ]
         widgets = {
             'Date of Admission': forms.DateInput(attrs={'type': 'date'}),
             'Date of Release': forms.DateInput(attrs={'type': 'date'}),
             'Date of Birth': forms.DateInput(attrs={'type': 'date'}),
             'Marital Status': forms.Select(attrs={'class': 'form-control'}),
             'Religion': forms.Select(attrs={'class': 'form-control'}),
-            'Phone Number (1)': forms.NumberInput(attrs={'class': 'form-control', 'type': 'tel'}),
-            'Phone Number (2)': forms.NumberInput(attrs={'class': 'form-control', 'type': 'tel'}),
-            'Whatsapp Number': forms.NumberInput(attrs={'class': 'form-control', 'type': 'tel'}),
+            'Phone Number (1)': forms.NumberInput(attrs={'class': 'form-control'}),
+            'Phone Number (2)': forms.NumberInput(attrs={'class': 'form-control'}),
+            'Whatsapp Number': forms.NumberInput(attrs={'class': 'form-control'}),
             'Email Address': forms.EmailInput(attrs={'class': 'form-control'}),
             'Details of ID Proof Recieved': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'Cut Mark Details': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+        labels = {
+            'substance_abuse': 'Substance Abuse',
+            'psychological_disturbance':'Psychological Disturbance',
+            'vindictiveness': 'Vindictiveness',
+            'behavioural_disfunctions': 'Behavioural Disfunction',
+            'prediagnosed_mental_condition': 'Pre-Diagnosed Mental Health Condition'
         }
 
     def __init__(self, *args, **kwargs):
@@ -81,30 +92,44 @@ class PatientForm(forms.ModelForm):
                 Column('Details of ID Proof Recieved', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
+            Row(
+                Column('substance_abuse', css_class='form-group col-md-6 mb-0'),
+                Column('psychological_disturbance', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('vindictiveness', css_class='form-group col-md-6 mb-0'),
+                Column('behavioural_disfunctions', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('prediagnosed_mental_condition', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
         )
     
 class RepresentativeForm(forms.ModelForm):
     class Meta:
         model = Representative
         fields = [
-            'father_name', 
-            'mother_name', 
-            'address', 
-            'name_of_local_guardian', 
-            'address_of_local_guardian', 
-            'name_of_person_responsible_for_treatment', 
-            'address_2', 
-            'detail_of_id_proof_recieved'
+            'Name of Local Guardian', 
+            'Address of Local Guardian',
+            'Phone Number of Local Guardian',
+            'Name of Person Responsible for Treatment',
+            'Relationship with Patient',
+            'Address of Person Responsible for Treatment', 
+            'Phone Number of Person Responsible for Treatment', 
+            'Details of ID Proof Recieved'
         ]
         widgets = {
-            'father_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'mother_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'name_of_local_guardian': forms.TextInput(attrs={'class': 'form-control'}),
-            'address_of_local_guardian': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'name_of_person_responsible_for_treatment': forms.TextInput(attrs={'class': 'form-control'}),
-            'address_2': forms.TextInput(attrs={'class': 'form-control'}),
-            'detail_of_id_proof_recieved': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'Name of Local Guardian': forms.TextInput(attrs={'class': 'form-control'}),
+            'Address of Local Guardian': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'Phone Number of Local Guardian': forms.NumberInput(attrs={'class': 'form-control'}),
+            'Name of Person Responsible for Treatment': forms.TextInput(attrs={'class': 'form-control'}),
+            'Relationship with Patient': forms.TextInput(attrs={'class': 'form-control'}),
+            'Address of Person Responsible for Treatment': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'Phone Number of Person Responsible for Treatment': forms.NumberInput(attrs={'class': 'form-control'}),
+            'Details of ID Proof Recieved': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -114,26 +139,29 @@ class RepresentativeForm(forms.ModelForm):
         self.helper.form_tag = False
         self.helper.layout = Layout(
             Row(
-                Column('father_name', css_class='form-group col-md-6 mb-0'),
-                Column('mother_name', css_class='form-group col-md-6 mb-0'),
+                Column('Name of Local Guardian', css_class='form-group col-md-6 mb-0'),
+                Column('Phone Number of Local Guardian', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('address', css_class='form-group col-md-12 mb-0'),
+                Column('Address of Local Guardian', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('name_of_local_guardian', css_class='form-group col-md-6 mb-0'),
-                Column('address_of_local_guardian', css_class='form-group col-md-6 mb-0'),
+                Column('Name of Person Responsible for Treatment', css_class='form-group col-md-6 mb-0'),
+                Column('Phone Number of Person Responsible for Treatment', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('name_of_person_responsible_for_treatment', css_class='form-group col-md-6 mb-0'),
-                Column('address_2', css_class='form-group col-md-6 mb-0'),
+                Column('Relationship with Patient', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('detail_of_id_proof_recieved', css_class='form-group col-md-12 mb-0'),
+                Column('Address of Person Responsible for Treatment', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('Details of ID Proof Recieved', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
         )
@@ -209,15 +237,12 @@ class MOUForm(forms.ModelForm):
             'alcohol_beyond_permissible_limits', 
             'behavioural_psychological_condition', 
             'mental_health_issue', 
-            'guardian_name', 
-            'admission_date', 
             'monthly_fee_first_month', 
             'lab_charge', 
             'monthly_fee_second_month', 
             'monthly_fee_third_month'
         ]
         widgets = {
-            'admission_date': forms.DateInput(attrs={'type': 'date'}),
             'monthly_fee_first_month': forms.NumberInput(attrs={'step': '0.01'}),
             'lab_charge': forms.NumberInput(attrs={'step': '0.01'}),
             'monthly_fee_second_month': forms.NumberInput(attrs={'step': '0.01'}),
@@ -227,11 +252,9 @@ class MOUForm(forms.ModelForm):
             'narcotics_drugs_abuse': 'Narcotics Drugs Abuse',
             'psychotropic_substance_abuse': 'Psychotropic Substance Abuse',
             'controlled_substance_abuse': 'Controlled Substance Abuse',
-            'alcohol_beyond_permissible_limits': 'Alcohol beyond permissible limits',
+            'alcohol_beyond_permissible_limits': 'Consumption of Alcohol beyond permissible limits',
             'behavioural_psychological_condition': 'Associated Underlying Behavioural and Psychological Condition',
             'mental_health_issue': 'Pre-Diagnosed Mental Health Issue',
-            'guardian_name': 'Name of Local Guardian',
-            'admission_date': 'Date of Admission',
             'monthly_fee_first_month': 'Monthly Fee for the first month',
             'lab_charge': 'Lab Charge',
             'monthly_fee_second_month': 'Monthly Fee for the second month',
@@ -257,11 +280,6 @@ class MOUForm(forms.ModelForm):
             Row(
                 Column('behavioural_psychological_condition', css_class='form-group col-md-6 mb-0'),
                 Column('mental_health_issue', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
-            Row(
-                Column('guardian_name', css_class='form-group col-md-6 mb-0'),
-                Column('admission_date', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
