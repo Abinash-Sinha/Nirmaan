@@ -1,85 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Details</title>
+    <title>Patient Detail</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body {
-            background-color: #f8f8fa;
-            padding-top: 20px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .container {
-            max-width: 800px;
-            margin-top: 30px;
-        }
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .card-body {
-            padding: 30px;
-        }
-        .patient-details h1 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .card-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-        }
-        .card-text {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        .patient-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .dark-mode {
-            background-color: #2c2c2c;
-            color: #f8f8fa;
-        }
-        .dark-mode .card {
-            background-color: #3c3c3c;
-            color: #f8f8fa;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-        }
-        .toggle-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            cursor: pointer;
-        }
-        .toggle-button i {
-            color: #007bff;
-        }
-        .dark-mode .toggle-button i {
-            color: #f8f8fa;
-        }
-        .section-title {
-            margin-top: 40px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/patient_details.styles.css' %}">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="{% url 'get_patients' %}">Nirmaan</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'get_patients' %}">Patients</a>
@@ -99,64 +35,79 @@
             </ul>
         </div>
     </nav>
-    <button class="btn btn-secondary toggle-button" onclick="toggleTheme()">
+
+    <div class="toggle-button" onclick="toggleTheme()">
         <i class="fas fa-moon"></i>
-    </button>
-    <div class="container">
-        <div class="patient-details">
-            <h1>Patient Details</h1>
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title mb-4 mt-5">Personal Information</h2>
-                    <h5 class="card-title">{{ patient.name }}</h5>
-                    <p class="card-text"><strong>Admission Date:</strong> {{ patient.admission_date }}</p>
-                    <p class="card-text"><strong>Release Date:</strong> {{ patient.release_date }}</p>
-                    <p class="card-text"><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
-                    <p class="card-text"><strong>Occupation:</strong> {{ patient.occupation }}</p>
-                    <p class="card-text"><strong>Qualification:</strong> {{ patient.qualification }}</p>
-                    <p class="card-text"><strong>Mother's Name:</strong> {{ patient.mother_name }}</p>
-                    <p class="card-text"><strong>Marital Status:</strong> {{ patient.marital_status }}</p>
-                    <p class="card-text"><strong>Religion:</strong> {{ patient.religion }}</p>
-                    <p class="card-text"><strong>Income PM:</strong> {{ patient.income_pm }}</p>
-                    <p class="card-text"><strong>Language Spoken:</strong> {{ patient.language_spoken }}</p>
-                    <p class="card-text"><strong>Phone Number:</strong> {{ patient.phone_number }}</p>
-                    <p class="card-text"><strong>Whatsapp Number:</strong> {{ patient.whatsapp_number }}</p>
-                    <p class="card-text"><strong>Email ID:</strong> {{ patient.email_id }}</p>
-                    <p class="card-text"><strong>Details of ID Proof:</strong> {{ patient.details_of_id_proof_recieved }}</p>
-                    <p class="card-text"><strong>Cut Mark Details:</strong> {{ patient.cut_mark_detail }}</p>
-                    <h2 class="card-title mb-4 mt-5">Representative/Guardian/Parent</h2>
-                    <p class="card-text"><strong>Father Name:</strong> {{ representative.father_name }}</p>
-                    <p class="card-text"><strong>Mother Name:</strong> {{ representative.Mother_name }}</p>
-                    <p class="card-text"><strong>Address:</strong> {{ representative.address }}</p>
-                    <p class="card-text"><strong>Name of Local Guardian:</strong> {{ representative.name_of_local_guardian }}</p>
-                    <p class="card-text"><strong>Address of Local Guardian:</strong> {{ representative.address_of_local_guardian }}</p>
-                    <p class="card-text"><strong>Name of Person Responsible for Treatment:</strong> {{ representative.name_of_person_responsible_for_treatment }}</p>
-                    <p class="card-text"><strong>Address:</strong> {{ representative.address_2 }}</p>
-                    <p class="card-text"><strong>Detail of ID Proof Recieved:</strong> {{ representative.detail_of_id_proof_recieved }}</p>
-                    <h2 class="card-title mb-4 mt-5">Declaration</h2>
-                    <p class="card-text"><strong>Verbal abuse towards others:</strong> {{ declaration.verbal_abuse }}</p>
-                    <p class="card-text"><strong>Physical abuse towards others:</strong> {{ declaration.physical_abuse }}</p>
-                    <p class="card-text"><strong>Breaking articles:</strong> {{ declaration.breaking_articles }}</p>
-                    <p class="card-text"><strong>Involvement in antisocial activities:</strong> {{ declaration.antisocial_activities }}</p>
-                    <p class="card-text"><strong>Pending law suit including complaint and grievancelodged under any authority against the patient:</strong> {{ declaration.law_suits }}</p>
-                    <p class="card-text"><strong>Have you seen any depression, social isolation, self-harm or suicidal tendency within last 30 days in the patient:</strong> {{ declaration.abnormal_tendencies }}</p>
-                    <p class="card-text"><strong>Any abnormality during intimate romantic involvement:</strong> {{ declaration.abnormal_romatic_involment }}</p>
-                    <p class="card-text"><strong>Exposure to high risk behavior:</strong> {{ declaration.high_risk_behavior }}</p>
-                    <p class="card-text"><strong>Unreasonable anger outburst:</strong> {{ declaration.unreasonable_anger }}</p>
-                    <p class="card-text"><strong>Irresponsible toward life and familial aspects:</strong> {{ declaration.irresponsible_aspects }}</p>
-                    {% if patient.image %}
-                    <div class="text-center mb-3">
-                        <img src="{{ patient.image.url }}" alt="{{ patient.name }}" class="img-fluid patient-image">
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
     </div>
+    
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Patient Detail</h1>
+            <a href="{% url 'edit_patient' patient.id %}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+        </div>
+        
+        {% load crispy_forms_tags %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset disabled="disabled">
+                {% crispy patient_form %}
+                <h2>Representative/Guardian</h2>
+                {% crispy representative_form %}
+                <h2>Declarations</h2>
+                {% crispy declaration_form %}
+                <h2>Memorandum of Understanding</h2>
+                {% crispy mou_form %}  
+            </fieldset>
+        </form>
+
+        {% if item_quantities %}
+            <div class="mt-5">
+                <h2>Belongings</h2>
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Item</th>
+                            <th scope="col">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item_quantity in item_quantities %}
+                            <tr>
+                                <td>{{ item_quantity.item }}</td>
+                                <td>{{ item_quantity.quantity }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="mt-5">
+                <p>No belongings available for this patient.</p>
+            </div>
+        {% endif %}
+
+        {% if patient.image %}
+            <div class="text-center mt-5">
+                <img src="{{ patient.image.url }}" alt="Patient Image" class="img-fluid img-thumbnail">
+            </div>
+        {% else %}
+            <div class="text-center mt-5">
+                <p>No image available for this patient.</p>
+            </div>
+        {% endif %}
+        
+        
+    </div>
+
     <script>
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
         }
     </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

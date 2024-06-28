@@ -1,15 +1,15 @@
 from django.db import models
 
 class Patient(models.Model):
-	name = models.CharField(name="Name of Patient", max_length=100)
-	admission_date = models.DateField(name="Date of Admission", blank=True, null=True)
-	release_date = models.DateField(name="Date of Release", blank=True, null=True)
-	date_of_birth = models.DateField(name="Date of Birth", blank=True, null=True)
-	father_name = models.CharField(name="Name of Father", blank=True, null=True, max_length=100)
-	mother_name = models.CharField(name="Name of Mother", blank=True, null=True, max_length=100)
+	name = models.CharField(name='name', verbose_name="Name of Patient", max_length=100)
+	admission_date = models.DateField(name='admission_date', verbose_name="Date of Admission", blank=True, null=True)
+	release_date = models.DateField(name='release_date', verbose_name="Date of Release", blank=True, null=True)
+	date_of_birth = models.DateField(name='date_of_birth', verbose_name="Date of Birth", blank=True, null=True)
+	father_name = models.CharField(name='father_name', verbose_name="Name of Father", blank=True, null=True, max_length=100)
+	mother_name = models.CharField(name='mother_name', verbose_name="Name of Mother", blank=True, null=True, max_length=100)
 	image = models.ImageField(upload_to='patient_images/', blank=True, null=True)
-	occupation = models.CharField(name="Occupation", blank=True, null=True, max_length=100)
-	qualification = models.CharField(name="Qualification", blank=True, null=True, max_length=100)
+	occupation = models.CharField(name='occupation', verbose_name="Occupation", blank=True, null=True, max_length=100)
+	qualification = models.CharField(name='qualification', verbose_name="Qualification", blank=True, null=True, max_length=100)
 	
 	MARRIED = 'Married'
 	UNMARRIED = 'Unmarried'
@@ -17,7 +17,7 @@ class Patient(models.Model):
         (MARRIED, 'Married'),
         (UNMARRIED, 'Unmarried'),
     ]
-	marital_status = models.CharField(name="Marital Status", blank=True, null=True, max_length=50, choices=MARITAL_STATUS_CHOICES)
+	marital_status = models.CharField(name='marital_status', verbose_name="Marital Status", blank=True, null=True, max_length=50, choices=MARITAL_STATUS_CHOICES)
 
 	HINDU = 'Hindu'
 	MUSLIM = 'Muslim'
@@ -30,15 +30,15 @@ class Patient(models.Model):
 		(OTHER, 'Other'),
 	]
 
-	religion = models.CharField(name="Religion", blank=True, null=True, max_length=100, choices=RELIGION_CHOICES)
-	income_pm = models.DecimalField(name="Income Per Month", blank=True, null=True, max_digits=10, decimal_places=2)
-	language_spoken = models.CharField(name="Language(s) Spoken", blank=True, null=True, max_length=100)
-	phone_number_1 = models.IntegerField(name="Phone Number (1)", blank=True, null=True, max_length=10)
-	phone_number_2 = models.IntegerField(name="Phone Number (2)", blank=True, null=True, max_length=10)
-	whatsapp_number = models.IntegerField(name="Whatsapp Number", blank=True, null=True, max_length=10)
-	email_id = models.EmailField(name="Email Address", blank=True, null=True)
-	details_of_id_proof_recieved = models.TextField(name="Details of ID Proof Recieved", blank=True, null=True)
-	cut_mark_detail = models.CharField(name="Cut Mark Details", blank=True, null=True, max_length=100)
+	religion = models.CharField(name='religion', verbose_name="Religion", blank=True, null=True, max_length=100, choices=RELIGION_CHOICES)
+	income_pm = models.DecimalField(name='income_pm', verbose_name="Income Per Month", blank=True, null=True, max_digits=10, decimal_places=2)
+	language_spoken = models.CharField(name='language_spoken', verbose_name="Language(s) Spoken", blank=True, null=True, max_length=100)
+	phone_number_1 = models.IntegerField(name='phone_number_1', verbose_name="Phone Number (1)", blank=True, null=True, max_length=10)
+	phone_number_2 = models.IntegerField(name='phone_number_2', verbose_name="Phone Number (2)", blank=True, null=True, max_length=10)
+	whatsapp_number = models.IntegerField(name='whatsapp_number', verbose_name="Whatsapp Number", blank=True, null=True, max_length=10)
+	email_id = models.EmailField(name='email_id', verbose_name="Email Address", blank=True, null=True)
+	details_of_id_proof_recieved = models.TextField(name='details_of_id_proof_recieved', verbose_name="Details of ID Proof Recieved", blank=True, null=True)
+	cut_mark_detail = models.CharField(name="cut_mark_detail", verbose_name="Cut Mark Details", blank=True, null=True, max_length=100)
 
 	CONDITIONS = [
         ('substance_abuse', 'Substance Abuse'),
@@ -59,14 +59,14 @@ class Patient(models.Model):
 
 class Representative(models.Model):
 	patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-	name_of_local_guardian = models.CharField(name="Name of Local Guardian", blank=True, null=True, max_length=100)
-	address_of_local_guardian = models.TextField(name="Address of Local Guardian", blank=True, null=True)
-	phone_number_local_guardian = models.IntegerField(name="Phone Number of Local Guardian", blank=True, null=True, max_length=10)
-	name_of_person_responsible_for_treatment = models.CharField(name="Name of Person Responsible for Treatment", blank=True, null=True, max_length=100)
-	relationship_with_patient = models.CharField(name="Relationship with Patient", blank=True, null=True, max_length=100)
-	address__of_person_responsible = models.CharField(name="Address of Person Responsible for Treatment", blank=True, null=True, max_length=100)
-	phone_number_person_responsible = models.IntegerField(name="Phone Number of Person Responsible for Treatment", blank=True, null=True, max_length=10)
-	detail_of_id_proof_recieved = models.TextField(name="Details of ID Proof Recieved", blank=True, null=True)
+	name_of_local_guardian = models.CharField(name='name_of_local_guardian', verbose_name="Name of Local Guardian", blank=True, null=True, max_length=100)
+	address_of_local_guardian = models.TextField(name='address_of_local_guardian', verbose_name="Address of Local Guardian", blank=True, null=True)
+	phone_number_local_guardian = models.IntegerField(name='phone_number_local_guardian', verbose_name="Phone Number of Local Guardian", blank=True, null=True, max_length=10)
+	name_of_person_responsible_for_treatment = models.CharField(name='name_of_person_responsible_for_treatment', verbose_name="Name of Person Responsible for Treatment", blank=True, null=True, max_length=100)
+	relationship_with_patient = models.CharField(name='relationship_with_patient', verbose_name="Relationship with Patient", blank=True, null=True, max_length=100)
+	address_of_person_responsible = models.CharField(name='address_of_person_responsible', verbose_name="Address of Person Responsible for Treatment", blank=True, null=True, max_length=100)
+	phone_number_person_responsible = models.IntegerField(name='phone_number_person_responsible', verbose_name="Phone Number of Person Responsible for Treatment", blank=True, null=True, max_length=10)
+	detail_of_id_proof_recieved = models.TextField(name='detail_of_id_proof_recieved', verbose_name="Details of ID Proof Recieved", blank=True, null=True)
 
 	def __str__(self) -> str:
 		return self.patient.name
@@ -123,3 +123,11 @@ class MOU(models.Model):
 
     def __str__(self):
         return f"MOU for Patient: {self.patient.name}"
+
+class ItemQuantity(models.Model):
+	patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+	item = models.CharField(max_length=255, blank=True, null=True)
+	quantity = models.IntegerField(blank=True, null=True)
+	
+	def __str__(self):
+		return f"{self.item} - {self.quantity}"

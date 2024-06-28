@@ -3,33 +3,32 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Row, Column, Submit
 from crispy_forms.bootstrap import InlineRadios
 from drf_extra_fields.fields import Base64ImageField
-from .models import Patient, Representative, Declaration, MOU
+from .models import Patient, Representative, Declaration, MOU, ItemQuantity
 
 class PatientForm(forms.ModelForm):
     image_data = Base64ImageField(required=False)
-    release_date = forms.DateField(required=False)
     
     class Meta:
         model = Patient
-        fields = ['Name of Patient', 'Date of Admission','Date of Release', 'Date of Birth', 'Name of Father', 'Name of Mother', 
-                  'Occupation', 'Qualification', 'Marital Status', 'Religion', 
-                  'Income Per Month', 'Language(s) Spoken', 'Phone Number (1)','Phone Number (2)', 
-                  'Whatsapp Number', 'Email Address', 'Details of ID Proof Recieved', 'Cut Mark Details',
-                  'substance_abuse', 'psychological_disturbance', 'vindictiveness', 'behavioural_disfunctions',
-                   'prediagnosed_mental_condition'
-                ]
+        fields = [
+            'name', 'admission_date', 'release_date', 'date_of_birth', 'father_name', 'mother_name',
+            'image', 'occupation', 'qualification', 'marital_status', 'religion', 'income_pm',
+            'language_spoken', 'phone_number_1', 'phone_number_2', 'whatsapp_number', 'email_id',
+            'details_of_id_proof_recieved', 'cut_mark_detail', 'substance_abuse', 'psychological_disturbance',
+            'vindictiveness', 'behavioural_disfunctions', 'prediagnosed_mental_condition'
+        ]
         widgets = {
-            'Date of Admission': forms.DateInput(attrs={'type': 'date'}),
-            'Date of Release': forms.DateInput(attrs={'type': 'date'}),
-            'Date of Birth': forms.DateInput(attrs={'type': 'date'}),
-            'Marital Status': forms.Select(attrs={'class': 'form-control'}),
-            'Religion': forms.Select(attrs={'class': 'form-control'}),
-            'Phone Number (1)': forms.NumberInput(attrs={'class': 'form-control'}),
-            'Phone Number (2)': forms.NumberInput(attrs={'class': 'form-control'}),
-            'Whatsapp Number': forms.NumberInput(attrs={'class': 'form-control'}),
-            'Email Address': forms.EmailInput(attrs={'class': 'form-control'}),
-            'Details of ID Proof Recieved': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'Cut Mark Details': forms.TextInput(attrs={'class': 'form-control'}),
+            'admission_date': forms.DateInput(attrs={'type': 'date'}),
+            'release_date': forms.DateInput(attrs={'type': 'date'}),
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'marital_status': forms.Select(attrs={'class': 'form-control'}),
+            'religion': forms.Select(attrs={'class': 'form-control'}),
+            'phone_number_1': forms.NumberInput(attrs={'class': 'form-control'}),
+            'phone_number_2': forms.NumberInput(attrs={'class': 'form-control'}),
+            'whatsapp_number': forms.NumberInput(attrs={'class': 'form-control'}),
+            'email_id': forms.EmailInput(attrs={'class': 'form-control'}),
+            'details_of_id_proof_recieved': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'cut_mark_detail': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
         labels = {
@@ -48,48 +47,48 @@ class PatientForm(forms.ModelForm):
 
         self.helper.layout = Layout(
             Row(
-                Column('Name of Patient', css_class='form-group col-md-6 mb-0'),
-                Column('Date of Admission', css_class='form-group col-md-6 mb-0'),
+                Column('name', css_class='form-group col-md-6 mb-0'),
+                Column('admission_date', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Date of Release', css_class='form-group col-md-6 mb-0'),
-                Column('Date of Birth', css_class='form-group col-md-6 mb-0'),
+                Column('release_date', css_class='form-group col-md-6 mb-0'),
+                Column('date_of_birth', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Name of Father', css_class='form-group col-md-6 mb-0'),
-                Column('Name of Mother', css_class='form-group col-md-6 mb-0'),
+                Column('father_name', css_class='form-group col-md-6 mb-0'),
+                Column('mother_name', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Occupation', css_class='form-group col-md-6 mb-0'),
-                Column('Qualification', css_class='form-group col-md-6 mb-0'),
+                Column('occupation', css_class='form-group col-md-6 mb-0'),
+                Column('qualification', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Marital Status', css_class='form-group col-md-6 mb-0'),
-                Column('Religion', css_class='form-group col-md-6 mb-0'),
+                Column('marital_status', css_class='form-group col-md-6 mb-0'),
+                Column('religion', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Income Per Month', css_class='form-group col-md-6 mb-0'),
-                Column('Language(s) Spoken', css_class='form-group col-md-6 mb-0'),
+                Column('income_pm', css_class='form-group col-md-6 mb-0'),
+                Column('language_spoken', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Phone Number (1)', css_class='form-group col-md-4 mb-0'),
-                Column('Phone Number (2)', css_class='form-group col-md-4 mb-0'),
-                Column('Whatsapp Number', css_class='form-group col-md-4 mb-0'),
+                Column('phone_number_1', css_class='form-group col-md-4 mb-0'),
+                Column('phone_number_2', css_class='form-group col-md-4 mb-0'),
+                Column('whatsapp_number', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Email Address', css_class='form-group col-md-6 mb-0'),
-                Column('Cut Mark Details', css_class='form-group col-md-6 mb-0'),
+                Column('email_id', css_class='form-group col-md-6 mb-0'),
+                Column('cut_mark_detail', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Details of ID Proof Recieved', css_class='form-group col-md-12 mb-0'),
+                Column('details_of_id_proof_recieved', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
             Row(
@@ -112,24 +111,24 @@ class RepresentativeForm(forms.ModelForm):
     class Meta:
         model = Representative
         fields = [
-            'Name of Local Guardian', 
-            'Address of Local Guardian',
-            'Phone Number of Local Guardian',
-            'Name of Person Responsible for Treatment',
-            'Relationship with Patient',
-            'Address of Person Responsible for Treatment', 
-            'Phone Number of Person Responsible for Treatment', 
-            'Details of ID Proof Recieved'
+            'name_of_local_guardian', 
+            'address_of_local_guardian',
+            'phone_number_local_guardian',
+            'name_of_person_responsible_for_treatment',
+            'relationship_with_patient',
+            'address_of_person_responsible', 
+            'phone_number_person_responsible', 
+            'detail_of_id_proof_recieved'
         ]
         widgets = {
-            'Name of Local Guardian': forms.TextInput(attrs={'class': 'form-control'}),
-            'Address of Local Guardian': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'Phone Number of Local Guardian': forms.NumberInput(attrs={'class': 'form-control'}),
-            'Name of Person Responsible for Treatment': forms.TextInput(attrs={'class': 'form-control'}),
-            'Relationship with Patient': forms.TextInput(attrs={'class': 'form-control'}),
-            'Address of Person Responsible for Treatment': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'Phone Number of Person Responsible for Treatment': forms.NumberInput(attrs={'class': 'form-control'}),
-            'Details of ID Proof Recieved': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'name_of_local_guardian': forms.TextInput(attrs={'class': 'form-control'}),
+            'address_of_local_guardian': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'phone_number_local_guardian': forms.NumberInput(attrs={'class': 'form-control'}),
+            'name_of_person_responsible_for_treatment': forms.TextInput(attrs={'class': 'form-control'}),
+            'relationship_with_patient': forms.TextInput(attrs={'class': 'form-control'}),
+            'address_of_person_responsible': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'phone_number_person_responsible': forms.NumberInput(attrs={'class': 'form-control'}),
+            'detail_of_id_proof_recieved': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -139,29 +138,29 @@ class RepresentativeForm(forms.ModelForm):
         self.helper.form_tag = False
         self.helper.layout = Layout(
             Row(
-                Column('Name of Local Guardian', css_class='form-group col-md-6 mb-0'),
-                Column('Phone Number of Local Guardian', css_class='form-group col-md-6 mb-0'),
+                Column('name_of_local_guardian', css_class='form-group col-md-6 mb-0'),
+                Column('phone_number_local_guardian', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Address of Local Guardian', css_class='form-group col-md-12 mb-0'),
+                Column('address_of_local_guardian', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Name of Person Responsible for Treatment', css_class='form-group col-md-6 mb-0'),
-                Column('Phone Number of Person Responsible for Treatment', css_class='form-group col-md-6 mb-0'),
+                Column('name_of_person_responsible_for_treatment', css_class='form-group col-md-6 mb-0'),
+                Column('phone_number_person_responsible', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Relationship with Patient', css_class='form-group col-md-12 mb-0'),
+                Column('relationship_with_patient', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Address of Person Responsible for Treatment', css_class='form-group col-md-12 mb-0'),
+                Column('address_of_person_responsible', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
             Row(
-                Column('Details of ID Proof Recieved', css_class='form-group col-md-12 mb-0'),
+                Column('detail_of_id_proof_recieved', css_class='form-group col-md-12 mb-0'),
                 css_class='form-row'
             ),
         )
@@ -293,3 +292,42 @@ class MOUForm(forms.ModelForm):
                 css_class='form-row'
             ),
         )
+
+class ItemQuantityForm(forms.ModelForm):
+    class Meta:
+        model = ItemQuantity
+        fields = ['item', 'quantity']
+        widgets = {
+            'item': forms.TextInput(attrs={'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ItemQuantityForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Row(
+                Column('item', css_class='form-group col-md-6 mb-0'),
+                Column('quantity', css_class='form-group col-md-6 mb-0'),
+            ),
+        )
+
+from django.forms import modelformset_factory
+
+ItemQuantityFormSet = modelformset_factory(ItemQuantity, form=ItemQuantityForm, extra=1, can_delete=True)
+
+class ItemQuantityFormSetHelper(FormHelper):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Row(
+                Column('item', css_class='form-group col-md-6 mb-0'),
+                Column('quantity', css_class='form-group col-md-6 mb-0'),
+            ),
+        )
+        self.render_required_fields = True

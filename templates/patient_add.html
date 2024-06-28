@@ -10,7 +10,41 @@
     <link rel="stylesheet" href="{% static 'css/patient_add.styles.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{% static 'js/patient_add.script.js' %}"></script>
-
+    <style>
+        body {
+            background-color: #f8f8fa;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 800px;
+        }
+        .card {
+            background-color: #fff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark-mode {
+            background-color: #2c2c2c;
+            color: #f8f8fa;
+        }
+        .dark-mode .card {
+            background-color: #3c3c3c;
+            color: #f8f8fa;
+        }
+        .toggle-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        .toggle-button i {
+            color: #007bff;
+        }
+        .dark-mode .toggle-button i {
+            color: #f8f8fa;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -39,12 +73,10 @@
         </div>
     </nav>
 
-    <button class="btn btn-secondary toggle-button" onclick="toggleTheme()">
+    <div class="toggle-button" onclick="toggleTheme()">
         <i class="fas fa-moon"></i>
-    </button>
+    </div>
     <div class="container mt-5">
-        <div class="card">
-            <div class="card-body">
                 <h1 class="card-title mb-4">Add Patient</h1>
                 {% load crispy_forms_tags %}
                 <form id="addPatientForm" method="post" enctype="multipart/form-data">
@@ -80,24 +112,32 @@
                     <h2 class="card-title mb-4 mt-5">Memorandum of Understanding</h2>
                     {% crispy mou_form %}
                     
-                    <button type="submit" class="btn btn-primary">Add Patient</button>
+                    <h2 class="card-title mb-4 mt-5">Items Belongings of Patient</h2>
+                    {{ item_quantity_formset.management_form }}
+                    <div id="formset">
+                        {% for form in item_quantity_formset %}
+                            <div class="item-form">
+                                {% crispy form %}
+                                <div class="btn btn-danger" style="margin-bottom: 10px;" onclick="removeForm(this)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="btn btn-primary" id="add-more">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+
                 </form>
-            </div>
-        </div>
+                <div id="empty-form" style="display: none;">
+                    <div class="item-form">
+                        {% crispy item_quantity_formset.empty_form %}
+                        <div class="btn btn-danger" style="margin-bottom: 10px;" onclick="removeForm(this)">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" form="addPatientForm" class="btn btn-primary mt-3">Add Patient</button>
     </div>
-    <script>
-        $('.dropdown-btn').click(function() {
-            $(this).next('.dropdown-content').toggle();
-        });
-        
-        $('.dropdown-content div').click(function() {
-            const value = $(this).data('value');
-            const text = $(this).text();
-            const dropdownBtn = $(this).closest('.custom-dropdown').find('.dropdown-btn');
-            dropdownBtn.text(text);
-            $(this).closest('.custom-dropdown').find('input').val(value);
-            $(this).parent().hide();
-        });
-    </script>
 </body>
 </html>

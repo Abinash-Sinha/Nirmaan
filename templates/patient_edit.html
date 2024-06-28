@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Patient</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/patient_add.styles.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{% static 'js/patient_add.script.js' %}"></script>
     <style>
         body {
             background-color: #f8f8fa;
@@ -72,32 +76,39 @@
         <i class="fas fa-moon"></i>
     </div>
 <div class="container mt-5">
-    <h1>Edit Patient</h1>
+   
     {% load crispy_forms_tags %}
     <form method="post" enctype="multipart/form-data">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Edit Patient</h1>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check"></i> Update Patient
+            </button>
+        </div>
         {% csrf_token %}
-        <!-- <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" name="name" value="{{ patient.name }}" required>
-        </div>
-        <div class="form-group">
-            <label for="dob">Date of Birth</label>
-            <input type="date" class="form-control" id="dob" name="date_of_birth" value="{{ patient.date_of_birth }}" required>
-        </div>
-        <div class="form-group">
-            <label for="father_name">Father's Name</label>
-            <input type="text" class="form-control" id="father_name" name="father_name" value="{{ patient.father_name }}" required>
-        </div>
-        <div class="form-group">
-            <label for="mother_name">Mother's Name</label>
-            <input type="text" class="form-control" id="mother_name" name="mother_name" value="{{ patient.mother_name }}" required>
-        </div> -->
         {% crispy form %}
         {% crispy representative_form %}
         {% crispy declaration_form %}
         {% crispy mou_form %}
+        <div class="form-group">
+            <label for="image">Patient Photo</label>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="image" name="image">
+                <label class="custom-file-label" for="image">Choose file...</label>
+            </div>
+            <input type="hidden" id="image_data" name="image_data">
+            <canvas id="canvas" style="display: none;"></canvas>
+            <video id="video"></video>
+            <button type="button" class="btn btn-primary capture-button" id="captureBtn">Capture Image from Webcam</button>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Edit Patient</h1>
 
-        <button type="submit" class="btn btn-primary">Update Patient</button>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check"></i> Update Patient
+            </button>
+        </div>
     </form>
 </div>
 <script>
