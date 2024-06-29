@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Row, Column, Submit
 from crispy_forms.bootstrap import InlineRadios
 from drf_extra_fields.fields import Base64ImageField
-from .models import Patient, Representative, Declaration, MOU, ItemQuantity, ReportFindings
+from .models import Patient, Representative, Declaration, MOU, ItemQuantity, ReportFindings, TemporaryRelease
 
 class PatientForm(forms.ModelForm):
     image_data = Base64ImageField(required=False)
@@ -386,3 +386,44 @@ class ReportFindingsForm(forms.ModelForm):
                 css_class='form-row'
             ),
         )
+
+class TemporaryReleaseForm(forms.ModelForm):
+    class Meta:
+        model = TemporaryRelease
+        fields = [
+            'date_of_taking_over',
+            'reason',
+            'date_of_return'
+        ]
+        widgets = {
+            'date_of_taking_over': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'reason': forms.TextInput(attrs={'class': 'form-control'}),
+            'date_of_return': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
+        labels = {
+            'date_of_taking_over': 'Date of Taking Over',
+            'reason': 'Reason',
+            'date_of_return': 'Date of Return'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(TemporaryReleaseForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Row(
+                Column('date_of_taking_over', css_class='form-group col-md-6 mb-0'),
+                Column('date_of_return', css_class='form-group col-md-6 mb-0'),
+            ),
+            Row(
+                Column('reason', css_class='form-group col-md-12 mb-0'),
+            ),
+        )
+
+TemporaryReleaseFormSet = modelformset_factory(
+    TemporaryRelease,
+    form=TemporaryReleaseForm,
+    extra=1,  # Number of extra forms to display
+    can_delete=True  # Allow deleting forms
+)

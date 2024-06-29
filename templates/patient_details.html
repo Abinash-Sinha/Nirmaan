@@ -1,115 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	{% load static %}
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Patient Detail</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-	<link rel="stylesheet" href="{% static 'css/patient_details.styles.css' %}">
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/patient_details.styles.css' %}">
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<a class="navbar-brand" href="{% url 'get_patients' %}">Nirmaan</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active">
-					<a class="nav-link" href="{% url 'get_patients' %}">Patients</a>
-				</li>
-				<!-- Add other navigation links here if needed -->
-			</ul>
-			<ul class="navbar-nav ml-auto">
-				{% if user.is_authenticated %}
-					<li class="nav-item">
-						<a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
-					</li>
-				{% else %}
-					<li class="nav-item">
-						<a class="nav-link" href="{% url 'account_login' %}">Login</a>
-					</li>
-				{% endif %}
-			</ul>
-		</div>
-	</nav>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'get_patients' %}">Nirmaan</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'get_patients' %}">Patients</a>
+                </li>
+                <!-- Add other navigation links here if needed -->
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
 
-	<div class="toggle-button" onclick="toggleTheme()">
-		<i class="fas fa-moon"></i>
-	</div>
-	
-	<div class="container mt-5">
-		<div class="d-flex justify-content-between align-items-center mb-4">
-			<h1>Patient Detail</h1>
-			<a href="{% url 'edit_patient' patient.id %}" class="btn btn-primary">
-				<i class="fas fa-edit"></i> Edit
-			</a>
-		</div>
-		
-		{% load crispy_forms_tags %}
-		<form method="post" enctype="multipart/form-data">
-			{% csrf_token %}
-			<fieldset disabled="disabled">
-				{% crispy patient_form %}
-				<h2>Representative/Guardian</h2>
-				{% crispy representative_form %}
-				<h2>Declarations</h2>
-				{% crispy declaration_form %}
-				<h2>Memorandum of Understanding</h2>
-				{% crispy mou_form %}
-				<h2>Report Findings</h2>
-				{% crispy reports_form %}
-			</fieldset>
-		</form>
+    <div class="toggle-button" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+    </div>
 
-		{% if item_quantities %}
-			<div class="mt-5">
-				<h2>Belongings</h2>
-				<table class="table table-bordered table-hover">
-					<thead class="thead-dark">
-						<tr>
-							<th scope="col">Item</th>
-							<th scope="col">Quantity</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for item_quantity in item_quantities %}
-							<tr>
-								<td>{{ item_quantity.item }}</td>
-								<td>{{ item_quantity.quantity }}</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-		{% else %}
-			<div class="mt-5">
-				<p>No belongings available for this patient.</p>
-			</div>
-		{% endif %}
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Patient Detail</h1>
+            <a href="{% url 'edit_patient' patient.id %}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+        </div>
 
-		{% if patient.image %}
-			<div class="text-center mt-5">
-				<img src="{{ patient.image.url }}" alt="Patient Image" class="img-fluid img-thumbnail">
-			</div>
-		{% else %}
-			<div class="text-center mt-5">
-				<p>No image available for this patient.</p>
-			</div>
-		{% endif %}
-		
-		
-	</div>
+        {% load crispy_forms_tags %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset disabled="disabled">
+                {% crispy patient_form %}
+                <h2>Representative/Guardian</h2>
+                {% crispy representative_form %}
+                <h2>Declarations</h2>
+                {% crispy declaration_form %}
+                <h2>Memorandum of Understanding</h2>
+                {% crispy mou_form %}
+                <h2>Report Findings</h2>
+                {% crispy reports_form %}
+            </fieldset>
+        </form>
 
-	<script>
-		function toggleTheme() {
-			document.body.classList.toggle('dark-mode');
-		}
-	</script>
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        {% if item_quantities %}
+            <div class="mt-5">
+                <h2>Belongings</h2>
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Item</th>
+                            <th scope="col">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item_quantity in item_quantities %}
+                            <tr>
+                                <td>{{ item_quantity.item }}</td>
+                                <td>{{ item_quantity.quantity }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="mt-5">
+                <p>No belongings available for this patient.</p>
+            </div>
+        {% endif %}
+
+        {% if temporary_releases %}
+            <div class="mt-5">
+                <h2>Temporary Releases</h2>
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Release Date</th>
+                            <th scope="col">Return Date</th>
+                            <th scope="col">Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for temporary_release in temporary_releases %}
+                            <tr>
+                                <td>{{ temporary_release.date_of_taking_over }}</td>
+                                <td>{{ temporary_release.date_of_return }}</td>
+                                <td>{{ temporary_release.reason }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="mt-5">
+                <p>No temporary releases available for this patient.</p>
+            </div>
+        {% endif %}
+
+        {% if patient.image %}
+            <div class="text-center mt-5">
+                <img src="{{ patient.image.url }}" alt="Patient Image" class="img-fluid img-thumbnail">
+            </div>
+        {% else %}
+            <div class="text-center mt-5">
+                <p>No image available for this patient.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

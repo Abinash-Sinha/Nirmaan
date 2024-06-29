@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="{% static 'css/patient_add.styles.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{% static 'js/patient_add.script.js' %}"></script>
-    
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -43,72 +42,96 @@
         <i class="fas fa-moon"></i>
     </div>
     <div class="container mt-5">
-                <h1 class="card-title mb-4">Add Patient</h1>
-                {% load crispy_forms_tags %}
-                <form id="addPatientForm" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                        <!-- Patient Form Fields -->
-                        
-                        {% crispy form %}
-                        <!-- Capture Image Section -->
-                        <div class="form-group">
-                            <label for="image">Patient Photo</label>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="image" name="image">
-                                <label class="custom-file-label" for="image">Choose file...</label>
-                            </div>
-                            <input type="hidden" id="image_data" name="image_data">
-                            <canvas id="canvas" style="display: none;"></canvas>
-                            <video id="video"></video>
-                            <button type="button" class="btn btn-primary capture-button" id="captureBtn">Capture Image from Webcam</button>
-                        </div>
-                    
-                    <!-- Representative Form Fields -->
-                    <h2 class="card-title mb-4 mt-5">Add Representative</h2>
-                    {% crispy representative_form %}
-                    
-                    <!-- Declaration Form Fields -->
-                    <div class="form-group">
-                        <h2 class="card-title mb-4 mt-5">Add Declaration</h2>
-                        <!-- <textarea class="form-control" id="declaration" name="declaration" rows="5" disabled>I do hereby acknowledge the existence of inherent risks associated to the activities during the treatment and have assumed such risks and agreed to accept the responsibilities for any injuries and damages which may occur during the treatment including remote risk of death or other serious damages & disabilities and therein do hereby release/waive/discharge and convent not to make responsible Nirmaan Rehabilitation Facility and any of its staffs or volunteers for such injuries and damages, if occurred during the treatment. I further understand the need of this treatment is to treat my consumption/suffering of Narcotics Drugs, Psychotropic Substance, Controlled Substance, Consumption of Alcohol beyond permissible limits, Associated Underlying Behavioural and Psychological Condition or for any Pre-Diagnosed Mental Health Issue wherein I have failed to stop using/controlling chemicals/such behaviours despite of having severe consequences since from past 12 months or more. It has been understood that the treatment I am going under is not guaranteed for cure and of a relapsing nature and recovery depends upon the practicing and executing action in mainstream life. I have read this document in full and have understood clearly without any doubt and signing this document without any pressure and external influence.
-                        </textarea> -->
-                        {% crispy declaration_form %}
-                    </div>
+        <h1 class="card-title mb-4">Add Patient</h1>
+        {% load crispy_forms_tags %}
+        <form id="addPatientForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Patient Form Fields -->
+            {% crispy form %}
+            <!-- Capture Image Section -->
+            <div class="form-group">
+                <label for="image">Patient Photo</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="image" name="image">
+                    <label class="custom-file-label" for="image">Choose file...</label>
+                </div>
+                <input type="hidden" id="image_data" name="image_data">
+                <canvas id="canvas" style="display: none;"></canvas>
+                <video id="video"></video>
+                <button type="button" class="btn btn-primary capture-button" id="captureBtn">Capture Image from Webcam</button>
+            </div>
 
-                    <h2 class="card-title mb-4 mt-5">Memorandum of Understanding</h2>
-                    {% crispy mou_form %}
+            <!-- Representative Form Fields -->
+            <h2 class="card-title mb-4 mt-5">Add Representative</h2>
+            {% crispy representative_form %}
 
-                    <h2 class="card-title mb-4 mt-5">Report Findings</h2>
-                    {% crispy report_findings_form %}
-                    
-                    <h2 class="card-title mb-4 mt-5">Items Belongings of Patient</h2>
-                    <div id="formset">
-                        {{ item_quantity_formset.management_form }}
-                        {% for form in item_quantity_formset %}
-                            <div class="item-form">
-                                {% crispy form %}
-                                <div class="btn btn-danger" style="margin-bottom: 10px;" onclick="removeForm(this)">
-                                    <i class="fas fa-trash-alt"></i>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <div class="btn btn-primary" id="add-more">
-                        <i class="fas fa-plus-circle"></i>
-                    </div>
+            <!-- Declaration Form Fields -->
+            <div class="form-group">
+                <h2 class="card-title mb-4 mt-5">Add Declaration</h2>
+                {% crispy declaration_form %}
+            </div>
 
-                </form>
-                <div id="empty-form" style="display: none;">
+            <h2 class="card-title mb-4 mt-5">Memorandum of Understanding</h2>
+            {% crispy mou_form %}
+
+            <h2 class="card-title mb-4 mt-5">Report Findings</h2>
+            {% crispy report_findings_form %}
+
+            <h2 class="card-title mb-4 mt-5">Items Belongings of Patient</h2>
+            <div id="formset">
+                {{ item_quantity_formset.management_form }}
+                {% for form in item_quantity_formset %}
                     <div class="item-form">
-                        {% crispy item_quantity_formset.empty_form %}
+                        {% crispy form %}
                         <div class="btn btn-danger" style="margin-bottom: 10px;" onclick="removeForm(this)">
                             <i class="fas fa-trash-alt"></i>
                         </div>
                     </div>
+                {% endfor %}
+            </div>
+            <div class="btn btn-primary" id="add-more">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+
+            <h2 class="card-title mb-4 mt-5">Temporary Releases</h2>
+            <div id="temporary_release_formset">
+                {{ temporary_release_formset.management_form }}
+                {% for form in temporary_release_formset %}
+                    <div class="temporary_release_form">
+                        {% crispy form %}
+                        <div class="btn btn-danger" style="margin-bottom: 10px;" onclick="TRemoveForm(this)">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="btn btn-primary" id="TRadd-more">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+        </form>
+
+        <div id="empty-form" style="display: none;">
+            <div class="item-form">
+                {% crispy item_quantity_formset.empty_form %}
+                <div class="btn btn-danger" style="margin-bottom: 10px;" onclick="removeForm(this)">
+                    <i class="fas fa-trash-alt"></i>
                 </div>
-                <div style="margin-bottom: 20px;">
-                    <button type="submit" form="addPatientForm" class="btn btn-primary mt-3">Add Patient</button>
+            </div>
+        </div>
+
+        <div id="temporary_release_formset-empty-form" style="display: none;">
+            <div class="temporary_release_form">
+                {% crispy temporary_release_formset.empty_form %}
+                <div class="btn btn-danger" style="margin-bottom: 10px;" onclick="TRemoveForm(this)">
+                    <i class="fas fa-trash-alt"></i>
                 </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <button type="submit" form="addPatientForm" class="btn btn-primary mt-3">Add Patient</button>
+        </div>
     </div>
 </body>
+
 </html>

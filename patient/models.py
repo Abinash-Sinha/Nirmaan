@@ -146,3 +146,12 @@ class ReportFindings(models.Model):
 
     def __str__(self):
         return f"Report Findings for {self.patient.name}"
+
+class TemporaryRelease(models.Model):
+	patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+	date_of_taking_over = models.DateField(name='date_of_taking_over', verbose_name="Date of Taking Over", blank=True, null=True)
+	reason = models.CharField(max_length=255, blank=True, null=True)
+	date_of_return = models.DateField(name='date_of_return', verbose_name="Date of Return", blank=True, null=True)
+
+	def __str__(self):
+		return f"{self.patient.name} - {self.reason}"
