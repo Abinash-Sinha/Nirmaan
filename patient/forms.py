@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Row, Column, Submit
 from crispy_forms.bootstrap import InlineRadios
 from drf_extra_fields.fields import Base64ImageField
-from .models import Patient, Representative, Declaration, MOU, ItemQuantity
+from .models import Patient, Representative, Declaration, MOU, ItemQuantity, ReportFindings
 
 class PatientForm(forms.ModelForm):
     image_data = Base64ImageField(required=False)
@@ -318,16 +318,71 @@ from django.forms import modelformset_factory
 
 ItemQuantityFormSet = modelformset_factory(ItemQuantity, form=ItemQuantityForm, extra=1, can_delete=True)
 
-class ItemQuantityFormSetHelper(FormHelper):
+class ReportFindingsForm(forms.ModelForm):
+    class Meta:
+        model = ReportFindings
+        fields = [
+            'chief_complaints',
+            'frame_of_reference',
+            'learning_disability_findings',
+            'relevant_history_childhood_findings',
+            'depression_anxiety_findings',
+            'findings_on_needle_condom_awareness',
+            'findings_over_trauma',
+            'aspects_traits_of_personality',
+            'summary'
+        ]
+        widgets = {
+            'chief_complaints': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'frame_of_reference': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'learning_disability_findings': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'relevant_history_childhood_findings': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'depression_anxiety_findings': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'findings_on_needle_condom_awareness': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'findings_over_trauma': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'aspects_traits_of_personality': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'summary': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+        labels = {
+            'chief_complaints': 'Chief Complaints',
+            'frame_of_reference': 'Frame of Reference',
+            'learning_disability_findings': 'Learning Disability Findings',
+            'relevant_history_childhood_findings': 'Relevant History and Childhood Findings',
+            'depression_anxiety_findings': 'Depression & Anxiety Findings',
+            'findings_on_needle_condom_awareness': 'Findings on Needle and Condom Awareness',
+            'findings_over_trauma': 'Findings over Trauma',
+            'aspects_traits_of_personality': 'Aspects and Traits of Personality',
+            'summary': 'Summary'
+        }
+
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(ReportFindingsForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_tag = False
         self.helper.layout = Layout(
             Row(
-                Column('item', css_class='form-group col-md-6 mb-0'),
-                Column('quantity', css_class='form-group col-md-6 mb-0'),
+                Column('chief_complaints', css_class='form-group col-md-6 mb-0'),
+                Column('frame_of_reference', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('learning_disability_findings', css_class='form-group col-md-6 mb-0'),
+                Column('relevant_history_childhood_findings', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('depression_anxiety_findings', css_class='form-group col-md-6 mb-0'),
+                Column('findings_on_needle_condom_awareness', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('findings_over_trauma', css_class='form-group col-md-6 mb-0'),
+                Column('aspects_traits_of_personality', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('summary', css_class='form-group col-md-12 mb-0'),
+                css_class='form-row'
             ),
         )
-        self.render_required_fields = True

@@ -131,3 +131,18 @@ class ItemQuantity(models.Model):
 	
 	def __str__(self):
 		return f"{self.item} - {self.quantity}"
+	
+class ReportFindings(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    chief_complaints = models.TextField(verbose_name="Chief Complaints", blank=True, null=True)
+    frame_of_reference = models.TextField(verbose_name="Frame of Reference", blank=True, null=True)
+    learning_disability_findings = models.TextField(verbose_name="Learning Disability Findings", blank=True, null=True)
+    relevant_history_childhood_findings = models.TextField(verbose_name="Relevant History and Childhood Findings", blank=True, null=True)
+    depression_anxiety_findings = models.TextField(verbose_name="Depression & Anxiety Findings", blank=True, null=True)
+    findings_on_needle_condom_awareness = models.TextField(verbose_name="Findings on Needle and Condom Awareness", blank=True, null=True)
+    findings_over_trauma = models.TextField(verbose_name="Findings over Trauma", blank=True, null=True)
+    aspects_traits_of_personality = models.TextField(verbose_name="Aspects and Traits of Personality", blank=True, null=True)
+    summary = models.TextField(verbose_name="Summary", blank=True, null=True)
+
+    def __str__(self):
+        return f"Report Findings for {self.patient.name}"

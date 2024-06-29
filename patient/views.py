@@ -1,11 +1,12 @@
+from mimetypes import init
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 import os
 import base64
-from .models import Patient, Representative, Declaration, MOU, ItemQuantity
-from .forms import PatientForm, RepresentativeForm, DeclarationForm, MOUForm, ItemQuantityForm, ItemQuantityFormSet, ItemQuantityFormSetHelper
+from .models import Patient, Representative, Declaration, MOU, ItemQuantity, ReportFindings
+from .forms import PatientForm, RepresentativeForm, DeclarationForm, MOUForm, ItemQuantityFormSet, ReportFindingsForm
 
 @login_required()
 def add_patient(request):
@@ -14,12 +15,13 @@ def add_patient(request):
         representative_form = RepresentativeForm(request.POST)
         declaration_form = DeclarationForm(request.POST)
         mou_form = MOUForm(request.POST)
-        
+        report_findings_form = ReportFindingsForm(request.POST)
+
         item_quantity_formset = ItemQuantityFormSet(request.POST)
 
 
         # print(form.is_valid())
-        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid() and mou_form.is_valid() and item_quantity_formset.is_valid():
+        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid() and mou_form.is_valid() and item_quantity_formset.is_valid() and report_findings_form.is_valid():
             image_data = request.POST.get('image_data')  # Get the base64-encoded image data from the form
             if image_data:
                 # Decode base64 data and save as a file in the media directory
@@ -54,6 +56,11 @@ def add_patient(request):
             mou.patient = patient
             mou.save()
 
+            # Save report_findings forms
+            report_findings = report_findings_form.save(commit=False)
+            report_findings.patient = patient
+            report_findings.save()
+
             # Save item formset
             item_quantity = item_quantity_formset.save(commit=False)
             for form in item_quantity:
@@ -66,24 +73,36 @@ def add_patient(request):
         representative_form = RepresentativeForm()
         declaration_form = DeclarationForm()
         mou_form = MOUForm()
+        report_findings_form = ReportFindingsForm()
         item_quantity_formset = ItemQuantityFormSet(queryset=ItemQuantity.objects.none())
+        
+    context = {'form': form, 
+               'representative_form': representative_form, 
+               'declaration_form': declaration_form, 
+               'mou_form': mou_form,
+               'report_findings_form': report_findings_form,
+               'item_quantity_formset': item_quantity_formset}
 
-    return render(request, 'patient_add.html', {'form': form, 'representative_form': representative_form, 'declaration_form': declaration_form, 'mou_form': mou_form, 'item_quantity_formset': item_quantity_formset})
+    return render(request, 'patient_add.html', context=context)
 
 @login_required()
 def edit_patient(request, patient_id):
     patient = get_object_or_404(Patient, pk=patient_id)
-    representative = get_object_or_404(Representative, patient=patient)
-    declaration = get_object_or_404(Declaration, patient=patient)
-    mou = get_object_or_404(MOU, patient=patient)
-
+    representative = Representative.objects.filter(patient=patient).first()
+    declaration = Declaration.objects.filter(patient=patient).first()
+    mou = MOU.objects.filter(patient=patient).first()
+    reports = ReportFindings.objects.filter(patient=patient).first()
+    item_quantities = ItemQuantity.objects.filter(patient=patient)
+    
     if request.method == 'POST':
         form = PatientForm(request.POST, request.FILES, instance=patient)
         representative_form = RepresentativeForm(request.POST, instance=representative)
         declaration_form = DeclarationForm(request.POST, instance=declaration)
         mou_form = MOUForm(request.POST, instance=mou)
+        reports_form = ReportFindingsForm(request.POST, instance=reports)
+        item_quantity_formset = ItemQuantityFormSet(request.POST, queryset=item_quantities)
 
-        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid() and mou_form.is_valid():
+        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid() and mou_form.is_valid() and reports_form.is_valid() and item_quantity_formset.is_valid():
             image_data = request.POST.get('image_data')  # Get the base64-encoded image data from the form
             if image_data:
                 # Decode base64 data and save as a file in the media directory
@@ -105,16 +124,33 @@ def edit_patient(request, patient_id):
             representative_form.save()
             declaration_form.save()
             mou_form.save()
+            reports_form.save()
+            item_quantity_list = item_quantity_formset.save(commit=False)
+            for item_quantity in item_quantity_list:
+                item_quantity.patient = patient
+                item_quantity.save()
+
             return HttpResponseRedirect(reverse('view_patient',kwargs={'patient_id':patient.id}))
         else:
-            return JsonResponse({'success': False, 'errors': form.errors})
+            return JsonResponse({'success': False, 'errors': item_quantity_formset.errors})
     else:
         form = PatientForm(instance=patient)
         representative_form = RepresentativeForm(instance=representative)
         declaration_form = DeclarationForm(instance=declaration)
         mou_form = MOUForm(instance=mou)
+        reports_form = ReportFindingsForm(instance=reports)
+        item_quantity_formset = ItemQuantityFormSet(queryset=item_quantities)
 
-    return render(request, 'patient_edit.html', {'form': form, 'representative_form': representative_form, 'declaration_form': declaration_form, 'mou_form': mou_form, 'patient': patient})
+    context = {'form': form,
+               'representative_form': representative_form,
+               'declaration_form': declaration_form,
+               'mou_form': mou_form,
+               'reports_form': reports_form,
+               'item_quantity_formset': item_quantity_formset,
+               'patient': patient
+            }
+
+    return render(request, 'patient_edit.html', context=context)
 
 @login_required()
 def delete_patient(request, patient_id):
@@ -136,19 +172,22 @@ def view_patient_details(request, patient_id):
     declaration = Declaration.objects.filter(patient=patient).first()
     mou = MOU.objects.filter(patient=patient).first()
     item_quantities = ItemQuantity.objects.filter(patient=patient)
-    
+    reports = ReportFindings.objects.filter(patient=patient).first()
+
     context = {}
 
     patient_form = PatientForm(instance=patient)
     representative_form = RepresentativeForm(instance=representative)
     declaration_form = DeclarationForm(instance=declaration)
     mou_form = MOUForm(instance=mou)
+    reports_form = ReportFindingsForm(instance=reports)
 
     context["patient_form"] = patient_form
     context["representative_form"] = representative_form
     context["declaration_form"] = declaration_form
     context["mou_form"] = mou_form
     context["item_quantities"] = list(item_quantities)
+    context["reports_form"] = reports_form
     context["patient"] = patient
     return render(request, 'patient_details.html', context=context)
 
