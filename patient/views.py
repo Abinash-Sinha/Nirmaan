@@ -5,8 +5,8 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 import os
 import base64
-from .models import Patient, Representative, Declaration, MOU, ItemQuantity, ReportFindings, TemporaryRelease
-from .forms import PatientForm, RepresentativeForm, DeclarationForm, MOUForm, ItemQuantityFormSet, ReportFindingsForm, TemporaryReleaseFormSet
+from .models import Patient, Representative, Declaration, MOU, ItemQuantity, ReportFindings, TemporaryRelease, JudicialProceedings
+from .forms import PatientForm, RepresentativeForm, DeclarationForm, MOUForm, ItemQuantityFormSet, ReportFindingsForm, TemporaryReleaseFormSet, JudicialProceedingsFormSet
 
 @login_required()
 def add_patient(request):
@@ -19,9 +19,9 @@ def add_patient(request):
 
         item_quantity_formset = ItemQuantityFormSet(request.POST, prefix='item_quantity_formset')
         temporary_release_formset = TemporaryReleaseFormSet(request.POST, prefix='temporary_release_formset')
+        judicial_proceedings_formset = JudicialProceedingsFormSet(request.POST, prefix='judicial_proceedings_formset')
 
-        # print(form.is_valid())
-        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid() and mou_form.is_valid() and item_quantity_formset.is_valid() and report_findings_form.is_valid() and temporary_release_formset.is_valid():
+        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid() and mou_form.is_valid() and item_quantity_formset.is_valid() and report_findings_form.is_valid() and temporary_release_formset.is_valid() and judicial_proceedings_formset.is_valid():
             image_data = request.POST.get('image_data')  # Get the base64-encoded image data from the form
             if image_data:
                 # Decode base64 data and save as a file in the media directory
@@ -72,6 +72,11 @@ def add_patient(request):
                 temporary_release.patient = patient
                 temporary_release.save()
 
+            judicial_proceedings_list = judicial_proceedings_formset.save(commit=False)
+            for form in judicial_proceedings_list:
+                form.patient = patient
+                form.save()
+
             return redirect('get_patients')
     else:
         form = PatientForm()
@@ -81,6 +86,7 @@ def add_patient(request):
         report_findings_form = ReportFindingsForm()
         item_quantity_formset = ItemQuantityFormSet(queryset=ItemQuantity.objects.none(), prefix='item_quantity_formset')
         temporary_release_formset = TemporaryReleaseFormSet(queryset=TemporaryRelease.objects.none(), prefix='temporary_release_formset')
+        judicial_proceedings_formset = JudicialProceedingsFormSet(queryset=JudicialProceedings.objects.none(), prefix='judicial_proceedings_formset')
         
     context = {'form': form, 
                'representative_form': representative_form, 
@@ -89,7 +95,8 @@ def add_patient(request):
                'report_findings_form': report_findings_form,
                'item_quantity_formset': item_quantity_formset,
                'temporary_release_formset': temporary_release_formset,
-               }
+               'judicial_proceedings_formset': judicial_proceedings_formset,
+            }
 
     return render(request, 'patient_add.html', context=context)
 
@@ -102,6 +109,7 @@ def edit_patient(request, patient_id):
     reports = ReportFindings.objects.filter(patient=patient).first()
     item_quantities = ItemQuantity.objects.filter(patient=patient)
     temporary_releases = TemporaryRelease.objects.filter(patient=patient)
+    judicial_proceedings = JudicialProceedings.objects.filter(patient=patient)
 
     if request.method == 'POST':
         form = PatientForm(request.POST, request.FILES, instance=patient)
@@ -111,8 +119,12 @@ def edit_patient(request, patient_id):
         reports_form = ReportFindingsForm(request.POST, instance=reports)
         item_quantity_formset = ItemQuantityFormSet(request.POST, prefix='item_quantity_formset')
         temporary_release_formset = TemporaryReleaseFormSet(request.POST, prefix='temporary_release_formset')
+        judicial_proceedings_formset = JudicialProceedingsFormSet(request.POST, prefix='judicial_proceedings_formset')
 
-        if form.is_valid() and representative_form.is_valid() and declaration_form.is_valid() and mou_form.is_valid() and reports_form.is_valid() and item_quantity_formset.is_valid() and temporary_release_formset.is_valid():
+        if (form.is_valid() and representative_form.is_valid() and declaration_form.is_valid() and 
+            mou_form.is_valid() and reports_form.is_valid() and item_quantity_formset.is_valid() and 
+            temporary_release_formset.is_valid() and judicial_proceedings_formset.is_valid()):
+            
             image_data = request.POST.get('image_data')  # Get the base64-encoded image data from the form
             if image_data:
                 # Decode base64 data and save as a file in the media directory
@@ -143,10 +155,14 @@ def edit_patient(request, patient_id):
             for temporary_release in temporary_release_list:
                 temporary_release.patient = patient
                 temporary_release.save()
+            judicial_proceedings_list = judicial_proceedings_formset.save(commit=False)
+            for judicial_proceeding in judicial_proceedings_list:
+                judicial_proceeding.patient = patient
+                judicial_proceeding.save()
 
             return HttpResponseRedirect(reverse('view_patient', kwargs={'patient_id': patient.id}))
         else:
-            return JsonResponse({'success': False, 'errors': temporary_release_formset.errors})
+            return JsonResponse({'success': False, 'errors': judicial_proceedings_formset.errors})
     else:
         form = PatientForm(instance=patient)
         representative_form = RepresentativeForm(instance=representative)
@@ -155,6 +171,7 @@ def edit_patient(request, patient_id):
         reports_form = ReportFindingsForm(instance=reports)
         item_quantity_formset = ItemQuantityFormSet(queryset=item_quantities, prefix='item_quantity_formset')
         temporary_release_formset = TemporaryReleaseFormSet(queryset=temporary_releases, prefix='temporary_release_formset')
+        judicial_proceedings_formset = JudicialProceedingsFormSet(queryset=judicial_proceedings, prefix='judicial_proceedings_formset')
 
     context = {
         'form': form,
@@ -164,10 +181,12 @@ def edit_patient(request, patient_id):
         'reports_form': reports_form,
         'item_quantity_formset': item_quantity_formset,
         'temporary_release_formset': temporary_release_formset,
+        'judicial_proceedings_formset': judicial_proceedings_formset,
         'patient': patient
     }
 
     return render(request, 'patient_edit.html', context=context)
+
 
 @login_required()
 def delete_patient(request, patient_id):
@@ -191,6 +210,7 @@ def view_patient_details(request, patient_id):
     item_quantities = ItemQuantity.objects.filter(patient=patient)
     reports = ReportFindings.objects.filter(patient=patient).first()
     temporary_releases = TemporaryRelease.objects.filter(patient=patient)
+    judicial_proceedings = JudicialProceedings.objects.filter(patient=patient)
 
     context = {}
 
@@ -207,7 +227,9 @@ def view_patient_details(request, patient_id):
     context["item_quantities"] = list(item_quantities)
     context["reports_form"] = reports_form
     context["temporary_releases"] = list(temporary_releases)
+    context["judicial_proceedings"] = list(judicial_proceedings)
     context["patient"] = patient
+    
     return render(request, 'patient_details.html', context=context)
 
 

@@ -12,6 +12,11 @@ function TRemoveForm(button) {
     TRupdateFormIndices();
 }
 
+function JPRemoveForm(button) {
+    $(button).closest('.judicial_proceedings_form').remove();
+    JPupdateFormIndices();
+}
+
 function updateFormIndices() {
     var forms = $('#formset .item-form');
     $('#id_item_quantity_formset-TOTAL_FORMS').val(forms.length);
@@ -27,14 +32,25 @@ function updateFormIndices() {
 
 function TRupdateFormIndices() {
     var forms = $('#temporary_release_formset .temporary_release_form');
-    console.log("---------"+forms.length);
     $('#id_temporary_release_formset-TOTAL_FORMS').val(forms.length);
-    console.log("---------"+$('#id_temporary_release_formset-TOTAL_FORMS').val());
     forms.each(function(index) {
         $(this).find(':input').each(function() {
             var name = $(this).attr('name').replace(/-\d+-/, '-' + index + '-');
             $(this).attr('name', name);
-            var id = $(this).attr('id_temporary_release_formset').replace(/-\d+-/, '-' + index + '-');
+            var id = $(this).attr('id').replace(/-\d+-/, '-' + index + '-');
+            $(this).attr('id', id);
+        });
+    });
+}
+
+function JPupdateFormIndices() {
+    var forms = $('#judicial_proceedings_formset .judicial_proceedings_form');
+    $('#id_judicial_proceedings_formset-TOTAL_FORMS').val(forms.length);
+    forms.each(function(index) {
+        $(this).find(':input').each(function() {
+            var name = $(this).attr('name').replace(/-\d+-/, '-' + index + '-');
+            $(this).attr('name', name);
+            var id = $(this).attr('id').replace(/-\d+-/, '-' + index + '-');
             $(this).attr('id', id);
         });
     });
@@ -82,5 +98,12 @@ document.addEventListener('DOMContentLoaded', function() {
         var form_html = $('#temporary_release_formset-empty-form').html().replace(/__prefix__/g, form_idx);
         $('#temporary_release_formset').append(form_html);
         $('#id_temporary_release_formset-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+
+    $('#JPadd-more').click(function() {
+        var form_idx = $('#id_judicial_proceedings_formset-TOTAL_FORMS').val();
+        var form_html = $('#judicial_proceedings_formset-empty-form').html().replace(/__prefix__/g, form_idx);
+        $('#judicial_proceedings_formset').append(form_html);
+        $('#id_judicial_proceedings_formset-TOTAL_FORMS').val(parseInt(form_idx) + 1);
     });
 });

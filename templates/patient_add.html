@@ -108,6 +108,23 @@
             <div class="btn btn-primary" id="TRadd-more">
                 <i class="fas fa-plus-circle"></i>
             </div>
+
+            <h2 class="card-title mb-4 mt-5">Judicial Proceedings</h2>
+            <div id="judicial_proceedings_formset">
+                {{ judicial_proceedings_formset.management_form }}
+                {% for form in judicial_proceedings_formset %}
+                    <div class="judicial_proceedings_form">
+                        {% crispy form %}
+                        <div class="btn btn-danger" style="margin-bottom: 10px;" onclick="JPRemoveForm(this)">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="btn btn-primary" id="JPadd-more">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+
         </form>
 
         <div id="empty-form" style="display: none;">
@@ -128,10 +145,18 @@
             </div>
         </div>
 
+        <div id="judicial_proceedings_formset-empty-form" style="display: none;">
+            <div class="judicial_proceedings_form">
+                {% crispy judicial_proceedings_formset.empty_form %}
+                <div class="btn btn-danger" style="margin-bottom: 10px;" onclick="JPRemoveForm(this)">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+            </div>
+        </div>
+
         <div style="margin-bottom: 20px;">
             <button type="submit" form="addPatientForm" class="btn btn-primary mt-3">Add Patient</button>
         </div>
     </div>
 </body>
-
 </html>

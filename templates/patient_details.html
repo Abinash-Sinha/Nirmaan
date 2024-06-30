@@ -118,6 +118,34 @@
             </div>
         {% endif %}
 
+        {% if judicial_proceedings %}
+            <div class="mt-5">
+                <h2>Judicial Proceedings</h2>
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Date of Hearing</th>
+                            <th scope="col">Summon or Case Number</th>
+                            <th scope="col">Allowed to Attend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for proceeding in judicial_proceedings %}
+                            <tr>
+                                <td>{{ proceeding.date_of_hearing }}</td>
+                                <td>{{ proceeding.case_no }}</td>
+                                <td>{{ proceeding.allowed_to_attend }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="mt-5">
+                <p>No judicial proceedings available for this patient.</p>
+            </div>
+        {% endif %}
+
         {% if patient.image %}
             <div class="text-center mt-5">
                 <img src="{{ patient.image.url }}" alt="Patient Image" class="img-fluid img-thumbnail">

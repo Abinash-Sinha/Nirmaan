@@ -155,3 +155,18 @@ class TemporaryRelease(models.Model):
 
 	def __str__(self):
 		return f"{self.patient.name} - {self.reason}"
+
+class JudicialProceedings(models.Model):
+	YES = 'Yes'
+	NO = 'No'
+	CHOICES = [
+		(YES, 'Yes'),
+		(NO, 'No'),
+	]
+	patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+	date_of_hearing = models.DateField(name='date_of_hearing', verbose_name="Date of Hearing", blank=True, null=True)
+	case_no = models.CharField(max_length=255, blank=True, null=True)
+	allowed_to_attend = models.CharField(name='allowed_to_attend', max_length=255, verbose_name="Allowed to Attend", blank=True, null=True, choices=CHOICES)
+
+	def __str__(self):
+		return f"{self.patient.name} - {self.case_no_}"

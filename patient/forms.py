@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Row, Column, Submit
 from crispy_forms.bootstrap import InlineRadios
 from drf_extra_fields.fields import Base64ImageField
-from .models import Patient, Representative, Declaration, MOU, ItemQuantity, ReportFindings, TemporaryRelease
+from .models import Patient, Representative, Declaration, MOU, ItemQuantity, ReportFindings, TemporaryRelease, JudicialProceedings
 
 class PatientForm(forms.ModelForm):
     image_data = Base64ImageField(required=False)
@@ -424,6 +424,45 @@ class TemporaryReleaseForm(forms.ModelForm):
 TemporaryReleaseFormSet = modelformset_factory(
     TemporaryRelease,
     form=TemporaryReleaseForm,
+    extra=1,  # Number of extra forms to display
+    can_delete=True  # Allow deleting forms
+)
+
+class JudicialProceedingsForm(forms.ModelForm):
+    class Meta:
+        model = JudicialProceedings
+        fields = [
+            'date_of_hearing',
+            'case_no',
+            'allowed_to_attend'
+        ]
+        widgets = {
+            'date_of_hearing': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'allowed_to_attend': forms.Select(attrs={'class': 'form-control'}),
+            'case_no': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'date_of_hearing': 'Date of Hearing',
+            'allowed_to_attend': 'Allowed to Attend',
+            'case_no': 'Summon or Case Number',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(JudicialProceedingsForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Row(
+                Column('date_of_hearing', css_class='form-group col-md-4 mb-0'),
+                Column('allowed_to_attend', css_class='form-group col-md-4 mb-0'),
+                Column('case_no', css_class='form-group col-md-4 mb-0'),
+            ),
+        )
+
+JudicialProceedingsFormSet = modelformset_factory(
+    JudicialProceedings,
+    form=JudicialProceedingsForm,
     extra=1,  # Number of extra forms to display
     can_delete=True  # Allow deleting forms
 )
