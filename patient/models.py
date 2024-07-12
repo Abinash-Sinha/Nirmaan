@@ -1,6 +1,8 @@
 from django.db import models
+import datetime
 
-class Patient(models.Model):
+class Patient(models.Model):	
+	uuid = models.CharField(max_length=10, blank=True, null=True)
 	name = models.CharField(name='name', verbose_name="Name of Patient", max_length=100)
 	admission_date = models.DateField(name='admission_date', verbose_name="Date of Admission", blank=True, null=True)
 	release_date = models.DateField(name='release_date', verbose_name="Date of Release", blank=True, null=True)
@@ -56,6 +58,12 @@ class Patient(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	def save(self, *args, **kwargs):
+		super(Patient, self).save(*args, **kwargs)
+		if not self.uuid:
+			self.uuid = f'{datetime.datetime.now().year}_{self.id}'
+		super(Patient, self).save()
 
 class Representative(models.Model):
 	patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
@@ -116,10 +124,10 @@ class MOU(models.Model):
     mental_health_issue = models.BooleanField(default=False)
 
     # Fee Information
-    monthly_fee_first_month = models.DecimalField(max_digits=10, decimal_places=2)
-    lab_charge = models.DecimalField(max_digits=10, decimal_places=2)
-    monthly_fee_second_month = models.DecimalField(max_digits=10, decimal_places=2)
-    monthly_fee_third_month = models.DecimalField(max_digits=10, decimal_places=2)
+    monthly_fee_first_month = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
+    lab_charge = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
+    monthly_fee_second_month = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
+    monthly_fee_third_month = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
 
     def __str__(self):
         return f"MOU for Patient: {self.patient.name}"

@@ -7,7 +7,6 @@ from .models import Patient, Representative, Declaration, MOU, ItemQuantity, Rep
 
 class PatientForm(forms.ModelForm):
     image_data = Base64ImageField(required=False)
-    
     class Meta:
         model = Patient
         fields = [
@@ -106,7 +105,7 @@ class PatientForm(forms.ModelForm):
                 css_class='form-row'
             ),
         )
-    
+
 class RepresentativeForm(forms.ModelForm):
     class Meta:
         model = Representative
