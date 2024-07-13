@@ -18,11 +18,13 @@ djangorestframework==3.15.1
 drf-extra-fields==3.7.0
 durationpy==0.7
 filetype==1.2.0
+gunicorn==22.0.0
 hjson==3.1.0
 idna==3.7
 jmespath==1.0.1
 kappa==0.6.0
 MarkupSafe==2.1.5
+packaging==24.1
 pillow==10.3.0
 placebo==0.9.0
 python-dateutil==2.9.0.post0
