@@ -9,6 +9,7 @@ click==8.1.7
 crispy-bootstrap4==2024.1
 Django==5.0.6
 django-allauth==0.63.3
+django-cors-headers==4.4.0
 django-crispy-forms==2.1
 django-pwa==1.1.0
 django-sslserver==0.22
